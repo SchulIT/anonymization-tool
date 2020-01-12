@@ -87,6 +87,10 @@ Nach Schritt 2 ist es auch möglich, Schülerinnen und Schüler, die nicht mehr 
 
 Anonyme Identitäten können als CSV-Datei exportiert werden, um sie dann weiterzuverarbeiten. 
 
+## Projekt selber bauen
+
+Eine kurze Anleitung zum Bauen des Projektes gibt es [hier](BUILD.md).
+
 ## Lizenz
 
 [MIT License](LICENSE.md)

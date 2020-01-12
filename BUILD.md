@@ -5,6 +5,7 @@ Wer das Projekt bauen (und evtl. auch daran mitarbeiten) möchte, benötigt folg
 * Visual Studio 2019 (Community-Edition reicht aus)
 * .NET Core 3 (lässt sich über den Visual Studio Installer ggf. nachinstallieren)
 * Git (TortoiseGit bspw.)
+* [dotnet-project-licenses](https://www.nuget.org/packages/dotnet-project-licenses): `dotnet tool install --global dotnet-project-licenses --version 1.1.1` 
 
 ## Klonen
 

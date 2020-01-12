@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define UpgradeGuid="92477C88-1F08-45D6-9F68-171280EA7BCA" ?>
-  <?define Version="0.1.0"?>
+  <?define Version="1.0.0"?>
 
-  <Product Id="*" Name="AnonymizationTool.Installer" Language="1033" Version="$(var.Version)" Manufacturer="SchulIT" UpgradeCode="$(var.UpgradeGuid)">
+  <Product Id="*" Name="Anonymisierungs-Tool (für SchILD-NRW)" Language="1033" Version="$(var.Version)" Manufacturer="SchulIT" UpgradeCode="$(var.UpgradeGuid)">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
     <Media Id="1" Cabinet="data.cab" EmbedCab="yes" />
 

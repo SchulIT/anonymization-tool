@@ -21,6 +21,15 @@
   <PropertyGroup>
     <InstallerPlatform>x64</InstallerPlatform>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug</DefineConstants>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
   </ItemGroup>
@@ -57,19 +66,7 @@
     <ItemGroup>
       <LinkerBindInputPaths Include="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\$(Configuration)\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" />
     </ItemGroup>
-    <HeatDirectory
-          DirectoryRefId="INSTALLLOCATION" 
-          OutputFile="obj\$(Configuration)\%(ProjectReference.Name).wxs" 
-          Directory="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\$(Configuration)\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" 
-          ComponentGroupName="SourceComponentGroup"
-          ToolPath="$(WixToolPath)" 
-          AutogenerateGuids="True"
-          GenerateGuidsNow="True"
-          SuppressCom="True"
-          SuppressRegistry="True"
-          SuppressFragments="true"
-          SuppressRootDirectory="true"
-          Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True'"/>
+    <HeatDirectory DirectoryRefId="INSTALLLOCATION" OutputFile="obj\$(Configuration)\%(ProjectReference.Name).wxs" Directory="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\$(Configuration)\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" ComponentGroupName="SourceComponentGroup" ToolPath="$(WixToolPath)" AutogenerateGuids="True" GenerateGuidsNow="True" SuppressCom="True" SuppressRegistry="True" SuppressFragments="true" SuppressRootDirectory="true" Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True'" />
     <ItemGroup>
       <Compile Include="obj\$(Configuration)\%(ProjectReference.Name).wxs" Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True'" />
     </ItemGroup>

@@ -17,6 +17,7 @@
     <Product>Anonymisierungs-Tool (für SchILD-NRW)</Product>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

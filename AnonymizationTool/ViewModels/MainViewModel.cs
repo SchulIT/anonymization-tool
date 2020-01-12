@@ -108,6 +108,12 @@ namespace AnonymizationTool.ViewModels
             var msg = new SelectDirectoryDialogMessage();
             Messenger.Send(msg);
 
+            if(string.IsNullOrEmpty(msg.Path))
+            {
+                Messenger.Send(new DialogMessage { Title = "Vorgang abgebrochen", Header = "Export abgebrochen", Text = "Es wurden keine Daten exportiert." });
+                return;
+            }
+
             try
             {
                 IsBusy = true;
@@ -115,6 +121,8 @@ namespace AnonymizationTool.ViewModels
                 BusyMessage = "Exportiere CSV-Dateien...";
 
                 await exportService.ExportAsync(msg.Path, Students);
+
+                Messenger.Send(new DialogMessage { Title = "Vorgang erfolgreich", Header = "Export erfolgreich", Text = $"Der Export war erfolgreich. Die Dateien wurden nach {msg.Path} exportiert." });
             }
             catch (Exception e)
             {

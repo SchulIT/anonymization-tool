@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define UpgradeGuid="92477C88-1F08-45D6-9F68-171280EA7BCA" ?>
+  <?define Version="0.1.0"?>
+
+  <Product Id="*" Name="AnonymizationTool.Installer" Language="1033" Version="$(var.Version)" Manufacturer="SchulIT" UpgradeCode="$(var.UpgradeGuid)">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <Media Id="1" Cabinet="data.cab" EmbedCab="yes" />
+
+    <!-- Icon for Programs & Features -->
+    <Icon Id="icon.ico" SourceFile="icon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+    <!-- APPLICATION DIRECTORY -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="APPLICATIONFOLDER" Name="SchulIT">
+          <Directory Id="INSTALLLOCATION" Name="AnonymizationTool" />
+        </Directory>
+      </Directory>
+
+      <!-- STARTMENU -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="MyShortCutsDir" Name="SchulIT">
+          <Component Id="ShortCutComponent" Guid="4593E51D-13AF-4955-8A72-FA363571CDA7">
+            <Shortcut Id="ShortCut" Name="Anonymisierungs-Tool" Target="[INSTALLLOCATION]\AnonymizationTool.exe" Icon="icon.ico" />
+            <RemoveFolder Id="RemoveShortCut" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\SchulIT\AnonymizationTool" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="MainFeature" Title="Anonymisierungs-Tool" Level="1">
+      <ComponentGroupRef Id="SourceComponentGroup" />
+
+      <Feature Id="ShortcutFeature" Title="Startmenü-Verknüpfung" Level="1">
+        <ComponentRef Id="ShortCutComponent"/>
+      </Feature>
+    </Feature>
+
+    <!-- PREVENT DOWNGRADING -->
+    <MajorUpgrade DowngradeErrorMessage="Downgrading nicht möglich. Bitte zunächst die Software deinstallieren und danach erneut probieren." />
+
+    <UIRef Id="WixUI_Advanced" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Property Id="ApplicationFolderName" Value="SchulIT" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+    <WixVariable Id="WixUILicenseRtf" Value="Eula.rtf" />
+
+    <SetDirectory Id="APPLICATIONFOLDER" Value="[ProgramFiles64Folder][ApplicationFolderName]">APPLICATIONFOLDER=""</SetDirectory>
+  </Product>
+
+  
+</Wix>

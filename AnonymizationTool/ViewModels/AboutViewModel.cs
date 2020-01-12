@@ -21,16 +21,27 @@ namespace AnonymizationTool.ViewModels
 
         public AboutViewModel()
         {
-            LoadNameAndVersion();
+            LoadInfo();
             LoadLibraries();
         }
 
-        private void LoadNameAndVersion()
+        private void LoadInfo()
         {
-            var assemblyName = Assembly.GetExecutingAssembly().GetName();
-            ApplicationName = assemblyName.Name;
-            Version = assemblyName.Version.ToString();
+            Version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            ApplicationName = GetName();
             Copyright = GetCopyright();
+        }
+
+        private string GetName()
+        {
+            var attribute = (Assembly.GetExecutingAssembly().GetCustomAttribute(typeof(AssemblyProductAttribute)) as AssemblyProductAttribute);
+
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            return attribute.Product;
         }
 
         private string GetCopyright()

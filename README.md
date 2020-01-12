@@ -1,5 +1,7 @@
 # Anomymisierungs-Tool
 
+[![Build Status](https://dev.azure.com/schulit/AnonymizationTool/_apis/build/status/SchulIT.anonymization-tool?branchName=master)](https://dev.azure.com/schulit/AnonymizationTool/_build/latest?definitionId=4&branchName=master)
+
 Mithilfe dieses Tools lassen sich Schülerinnen und Schüler aus SchILD-NRW importieren und anschließend anonymisieren. Hierber wird ein anonymer Vor- und Nachname sowie eine anonyme E-Mail Adresse erzeugt. 
 
 ![](screenshots/overview.png)

@@ -34,7 +34,7 @@ Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=$path$;Pwd=******;
 
 ❗ Dabei muss `$path$` durch den Pfad zur Datenbankdatei (bspw. `C:\SchILD-NRW\DB\ge_2018_19.mdb`) angepasst werden.
 
-Das Standard-Passwort für die Access-Datenbank von SchILD muss beim Hersteller angefragt werden.
+Das Standard-Passwort für die Access-Datenbank von SchILD muss [beim Hersteller](https://www.svws.nrw.de/) angefragt werden.
 
 ### Verbindung für die interne Datenbank
 

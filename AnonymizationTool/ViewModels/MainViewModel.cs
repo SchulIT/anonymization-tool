@@ -10,9 +10,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AnonymizationTool.ViewModels
@@ -256,14 +254,6 @@ namespace AnonymizationTool.ViewModels
                 var students = await dataSource.LoadStudentsAsync();
 
                 Students.AddRange(students);
-
-                /*App.Current.Dispatcher.Invoke(() =>
-                {*/
-                    foreach (var student in students)
-                    {
-                        Students.Add(student);
-                    }
-                /*});*/
             }
             catch (Exception e)
             {

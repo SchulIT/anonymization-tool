@@ -1,4 +1,5 @@
 ﻿using AnonymizationTool.Anonymization;
+using AnonymizationTool.Collections;
 using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AnonymizationTool.ViewModels
@@ -54,7 +56,7 @@ namespace AnonymizationTool.ViewModels
 
         #endregion
 
-        public ObservableCollection<AnonymousStudent> Students { get; } = new ObservableCollection<AnonymousStudent>();
+        public RangeObservableCollection<AnonymousStudent> Students { get; } = new RangeObservableCollection<AnonymousStudent>();
 
         public RelayCommand LoadStudentsCommand { get; private set; }
         public RelayCommand SyncCommand { get; private set; }
@@ -147,7 +149,7 @@ namespace AnonymizationTool.ViewModels
                 BusyProgress = null;
                 BusyMessage = "Lösche Schüler aus der internen Datenbank...";
 
-                await Task.Run(() =>
+                await Task.Factory.StartNew(() =>
                 {
                     var students = Students.Where(s => s.IsMissingInSchILD == true);
 
@@ -155,7 +157,7 @@ namespace AnonymizationTool.ViewModels
                     {
                         dataSource.RemoveStudent(student);
                     }
-                });
+                }, TaskCreationOptions.LongRunning);
 
                 await dataSource.SaveChangesAsync();
 
@@ -188,7 +190,7 @@ namespace AnonymizationTool.ViewModels
                 var databaseStudents = Students.ToList();
                 Students.Clear();
 
-                await Task.Run(() =>
+                await Task.Factory.StartNew(() =>
                 {
                     var currentStudentIdx = 0;
                     var studentsCount = (double)databaseStudents.Count;
@@ -208,17 +210,14 @@ namespace AnonymizationTool.ViewModels
                         RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
                         currentStudentIdx++;
                     }
-                });
+                }, TaskCreationOptions.LongRunning);
 
                 BusyProgress = null;
                 BusyMessage = "Speichere Änderungen in der internen Datenbank...";
 
                 await dataSource.SaveChangesAsync();
 
-                foreach (var student in databaseStudents)
-                {
-                    Students.Add(student);
-                }
+                Students.AddRange(databaseStudents);
             }
             catch (Exception e)
             {
@@ -258,13 +257,15 @@ namespace AnonymizationTool.ViewModels
                 BusyMessage = "Lade Schüler aus der internen Datenbank...";
                 var students = await dataSource.LoadStudentsAsync();
 
-                App.Current.Dispatcher.Invoke(() =>
-                {
+                Students.AddRange(students);
+
+                /*App.Current.Dispatcher.Invoke(() =>
+                {*/
                     foreach (var student in students)
                     {
                         Students.Add(student);
                     }
-                });
+                /*});*/
             }
             catch (Exception e)
             {
@@ -301,7 +302,7 @@ namespace AnonymizationTool.ViewModels
                 var databaseStudents = Students.ToList();
                 Students.Clear();
 
-                await Task.Run(() =>
+                await Task.Factory.StartNew(() =>
                 {
                     // Mark all students as missing in SchILD (this property gets updated if an student is found in SchILD
                     foreach (var student in databaseStudents)
@@ -338,7 +339,7 @@ namespace AnonymizationTool.ViewModels
                         RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
                         currentStudentIdx++;
                     }
-                });
+                }, TaskCreationOptions.LongRunning);
 
                 BusyProgress = null;
                 BusyMessage = "Speichere Änderungen in der internen Datenbank...";

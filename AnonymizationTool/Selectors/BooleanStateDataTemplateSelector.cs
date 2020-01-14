@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace AnonymizationTool.UI
+namespace AnonymizationTool.Selectors
 {
     public class BooleanStateDataTemplateSelector : DataTemplateSelector
     {

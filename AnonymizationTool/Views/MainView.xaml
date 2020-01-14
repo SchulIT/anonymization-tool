@@ -6,7 +6,7 @@
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:converters="clr-namespace:AnonymizationTool.Converters"
-    xmlns:ui="clr-namespace:AnonymizationTool.UI"
+    xmlns:selectors="clr-namespace:AnonymizationTool.Selectors"
     mc:Ignorable="d"
     Title="Anonymisierungs-Tool" Height="500" Width="1000"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Main}">
@@ -457,8 +457,8 @@
                 <GridView>
                     <GridViewColumn Header="" Width="22">
                         <GridViewColumn.CellTemplateSelector>
-                            <ui:BooleanStateDataTemplateSelector>
-                                <ui:BooleanStateDataTemplateSelector.TrueTemplate>
+                            <selectors:BooleanStateDataTemplateSelector>
+                                <selectors:BooleanStateDataTemplateSelector.TrueTemplate>
                                     <DataTemplate>
                                         <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Schüler ist nicht mehr in der SchILD-Datenbank vorhanden.">
@@ -479,9 +479,9 @@
                                             </Rectangle>
                                         </Viewbox>
                                     </DataTemplate>
-                                </ui:BooleanStateDataTemplateSelector.TrueTemplate>
+                                </selectors:BooleanStateDataTemplateSelector.TrueTemplate>
 
-                                <ui:BooleanStateDataTemplateSelector.FalseTemplate>
+                                <selectors:BooleanStateDataTemplateSelector.FalseTemplate>
                                     <DataTemplate>
                                         <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Schüler ist in der SchILD-Datenbank vorhanden.">
@@ -502,9 +502,9 @@
                                             </Rectangle>
                                         </Viewbox>
                                     </DataTemplate>
-                                </ui:BooleanStateDataTemplateSelector.FalseTemplate>
+                                </selectors:BooleanStateDataTemplateSelector.FalseTemplate>
 
-                                <ui:BooleanStateDataTemplateSelector.NullTemplate>
+                                <selectors:BooleanStateDataTemplateSelector.NullTemplate>
                                     <DataTemplate>
                                         <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Es ist unbekannt, ob der Schüler in der SchILD-Datenbank vorhanden ist.">
@@ -525,8 +525,8 @@
                                             </Rectangle>
                                         </Viewbox>
                                     </DataTemplate>
-                                </ui:BooleanStateDataTemplateSelector.NullTemplate>
-                            </ui:BooleanStateDataTemplateSelector>
+                                </selectors:BooleanStateDataTemplateSelector.NullTemplate>
+                            </selectors:BooleanStateDataTemplateSelector>
                         </GridViewColumn.CellTemplateSelector>
                     </GridViewColumn>
                     <GridViewColumn Header="SchILD-ID" DisplayMemberBinding="{Binding SchILDId}" />

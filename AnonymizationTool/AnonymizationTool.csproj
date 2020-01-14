@@ -61,10 +61,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="dotnet-project-licenses -i . -u -o -j&#xD;&#xA;" />
   </Target>

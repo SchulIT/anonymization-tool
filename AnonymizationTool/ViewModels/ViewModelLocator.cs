@@ -3,6 +3,7 @@ using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
 using AnonymizationTool.Settings;
+using AnonymizationTool.UI;
 using Autofac;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.Logging;
@@ -43,6 +44,7 @@ namespace AnonymizationTool.ViewModels
             builder.RegisterType<CsvExportService>().As<IExportService>().SingleInstance();
 
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
+            builder.RegisterType<UIDispatcher>().As<IDispatcher>().SingleInstance();
 
             builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
             builder.RegisterType<SettingsViewModel>().AsSelf().SingleInstance();

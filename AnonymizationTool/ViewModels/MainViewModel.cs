@@ -4,6 +4,7 @@ using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
 using AnonymizationTool.Messages;
+using AnonymizationTool.UI;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -70,15 +71,17 @@ namespace AnonymizationTool.ViewModels
         private readonly IPersistentDataSource dataSource;
         private readonly ISchILDDataSource schILDDataSource;
         private readonly IExportService exportService;
+        private readonly IDispatcher dispatcher;
         private readonly ILogger<MainViewModel> logger;
 
-        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IExportService exportService, ILogger<MainViewModel> logger, IMessenger messenger)
+        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IExportService exportService, IDispatcher dispatcher, ILogger<MainViewModel> logger, IMessenger messenger)
             : base(messenger)
         {
             this.studentFaker = studentFaker;
             this.dataSource = dataSource;
             this.schILDDataSource = schILDDataSource;
             this.exportService = exportService;
+            this.dispatcher = dispatcher;
             this.logger = logger;
 
             LoadStudentsCommand = new RelayCommand(LoadStudents, CanLoadStudents);
@@ -96,7 +99,7 @@ namespace AnonymizationTool.ViewModels
 
             dataSource.ConnectionStateChanged += (sender, args) =>
             {
-                RunOnUI(() =>
+                dispatcher.RunOnUI(() =>
                 {
                     LoadStudentsCommand?.RaiseCanExecuteChanged();
                     SyncCommand?.RaiseCanExecuteChanged();
@@ -207,7 +210,7 @@ namespace AnonymizationTool.ViewModels
                         dataSource.UpdateStudent(student);
 
                         // Update progressbar
-                        RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
+                        dispatcher.RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
                         currentStudentIdx++;
                     }
                 }, TaskCreationOptions.LongRunning);
@@ -232,11 +235,6 @@ namespace AnonymizationTool.ViewModels
         private bool CanAnonymize()
         {
             return !IsBusy && dataSource.IsConnected && Students.Count > 0;
-        }
-
-        private void RunOnUI(Action action)
-        {
-            App.Current.Dispatcher.BeginInvoke(action, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public async void LoadStudents()
@@ -336,7 +334,7 @@ namespace AnonymizationTool.ViewModels
                         PopulateAnonymousStudent(anonymousStudent, schildStudent);
 
                         // Update progressbar
-                        RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
+                        dispatcher.RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
                         currentStudentIdx++;
                     }
                 }, TaskCreationOptions.LongRunning);

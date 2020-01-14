@@ -438,129 +438,128 @@
                     <Run Text=" Schüler"></Run>
                 </TextBlock>
             </fluent:StatusBarItem>
+
+            <Separator HorizontalAlignment="Left" />
+            
+            <fluent:StatusBarItem HorizontalAlignment="Right" Margin="10,0,10,0" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Height="10" Width="50" Value="{Binding BusyProgress, Converter={StaticResource NullToZeroConverter}}" IsIndeterminate="{Binding BusyProgress, Converter={StaticResource IsNullConverter}}" />
+                    <TextBlock Text="{Binding BusyMessage}" Margin="10,0,0,0" />
+                </StackPanel>
+            </fluent:StatusBarItem>
         </fluent:StatusBar>
 
-        <xceed:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyMessage}">
-            <xceed:BusyIndicator.ProgressBarStyle>
-                <Style TargetType="ProgressBar">
-                    <Setter Property="Minimum" Value="0" />
-                    <Setter Property="Maximum" Value="100" />
-                    <Setter Property="Height" Value="10" />
-                    <Setter Property="Value" Value="{Binding Source={StaticResource ViewModelLocator}, Path=Main.BusyProgress}" />
-                    <Setter Property="IsIndeterminate" Value="{Binding Source={StaticResource ViewModelLocator}, Path=Main.BusyProgress, Converter={StaticResource IsNullConverter}}" />
-                </Style>
-            </xceed:BusyIndicator.ProgressBarStyle>
 
-            <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="" Width="22">
-                            <GridViewColumn.CellTemplateSelector>
-                                <ui:BooleanStateDataTemplateSelector>
-                                    <ui:BooleanStateDataTemplateSelector.TrueTemplate>
-                                        <DataTemplate>
-                                            <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+
+        <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="" Width="22">
+                        <GridViewColumn.CellTemplateSelector>
+                            <ui:BooleanStateDataTemplateSelector>
+                                <ui:BooleanStateDataTemplateSelector.TrueTemplate>
+                                    <DataTemplate>
+                                        <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Schüler ist nicht mehr in der SchILD-Datenbank vorhanden.">
-                                                <Rectangle Width="16" Height="16">
-                                                    <Rectangle.Fill>
-                                                        <DrawingBrush>
-                                                            <DrawingBrush.Drawing>
-                                                                <DrawingGroup>
-                                                                    <DrawingGroup.Children>
-                                                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M7.5254,10.8418L3.6074,15.1658C3.1354,15.6428 2.5314,15.8908 1.8744,15.8848 0.688400000000001,15.8748 0.000399999999999956,14.4528 0.000399999999999956,14.4528L0.000399999999999956,11.9998 4.4144,7.9568 2.1594,5.7018C1.1424,4.6728 1.3394,3.1068 2.1594,2.2878 2.5784,1.8658 3.2314,1.6118 3.9034,1.6118 4.5894,1.6118 5.2144,1.8758 5.6184,2.3358L7.5004,4.9998 12.5414,1.4948 15.5004,1.4998 10.1744,8.0418 16.0004,15.9998 14.0004,15.9998z" />
-                                                                        <GeometryDrawing Brush="#FFA1260D" Geometry="F1M14.4629,14.9883L13.9629,14.9953 7.5359,9.4473 2.9629,14.4953C2.4249,15.0353 1.4629,14.9953 0.962899999999999,14.4953 0.462899999999999,13.9953 0.4239,13.0373 0.962899999999999,12.4953L5.9629,7.9953 2.9629,4.9953C2.3789,4.4033 2.4759,3.4823 2.9629,2.9953 3.4339,2.5203 4.4829,2.4483 4.9629,2.9953L7.4629,6.4953 12.4999,2.5003 13.4999,2.5003 8.9629,7.9953z" />
-                                                                    </DrawingGroup.Children>
-                                                                </DrawingGroup>
-                                                            </DrawingBrush.Drawing>
-                                                        </DrawingBrush>
-                                                    </Rectangle.Fill>
-                                                </Rectangle>
-                                            </Viewbox>
-                                        </DataTemplate>
-                                    </ui:BooleanStateDataTemplateSelector.TrueTemplate>
+                                            <Rectangle Width="16" Height="16">
+                                                <Rectangle.Fill>
+                                                    <DrawingBrush>
+                                                        <DrawingBrush.Drawing>
+                                                            <DrawingGroup>
+                                                                <DrawingGroup.Children>
+                                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M7.5254,10.8418L3.6074,15.1658C3.1354,15.6428 2.5314,15.8908 1.8744,15.8848 0.688400000000001,15.8748 0.000399999999999956,14.4528 0.000399999999999956,14.4528L0.000399999999999956,11.9998 4.4144,7.9568 2.1594,5.7018C1.1424,4.6728 1.3394,3.1068 2.1594,2.2878 2.5784,1.8658 3.2314,1.6118 3.9034,1.6118 4.5894,1.6118 5.2144,1.8758 5.6184,2.3358L7.5004,4.9998 12.5414,1.4948 15.5004,1.4998 10.1744,8.0418 16.0004,15.9998 14.0004,15.9998z" />
+                                                                    <GeometryDrawing Brush="#FFA1260D" Geometry="F1M14.4629,14.9883L13.9629,14.9953 7.5359,9.4473 2.9629,14.4953C2.4249,15.0353 1.4629,14.9953 0.962899999999999,14.4953 0.462899999999999,13.9953 0.4239,13.0373 0.962899999999999,12.4953L5.9629,7.9953 2.9629,4.9953C2.3789,4.4033 2.4759,3.4823 2.9629,2.9953 3.4339,2.5203 4.4829,2.4483 4.9629,2.9953L7.4629,6.4953 12.4999,2.5003 13.4999,2.5003 8.9629,7.9953z" />
+                                                                </DrawingGroup.Children>
+                                                            </DrawingGroup>
+                                                        </DrawingBrush.Drawing>
+                                                    </DrawingBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                        </Viewbox>
+                                    </DataTemplate>
+                                </ui:BooleanStateDataTemplateSelector.TrueTemplate>
 
-                                    <ui:BooleanStateDataTemplateSelector.FalseTemplate>
-                                        <DataTemplate>
-                                            <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                <ui:BooleanStateDataTemplateSelector.FalseTemplate>
+                                    <DataTemplate>
+                                        <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Schüler ist in der SchILD-Datenbank vorhanden.">
-                                                <Rectangle Width="16" Height="16">
-                                                    <Rectangle.Fill>
-                                                        <DrawingBrush>
-                                                            <DrawingBrush.Drawing>
-                                                                <DrawingGroup>
-                                                                    <DrawingGroup.Children>
-                                                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M4.3818,15L0.3818,7 5.6178,7 6.4998,8.764 10.3818,1 15.6178,1 8.6178,15z" />
-                                                                        <GeometryDrawing Brush="#FF414141" Geometry="F1M11,2L6.5,11 5,8 2,8 5,14 8,14 14,2z" />
-                                                                    </DrawingGroup.Children>
-                                                                </DrawingGroup>
-                                                            </DrawingBrush.Drawing>
-                                                        </DrawingBrush>
-                                                    </Rectangle.Fill>
-                                                </Rectangle>
-                                            </Viewbox>
-                                        </DataTemplate>
-                                    </ui:BooleanStateDataTemplateSelector.FalseTemplate>
+                                            <Rectangle Width="16" Height="16">
+                                                <Rectangle.Fill>
+                                                    <DrawingBrush>
+                                                        <DrawingBrush.Drawing>
+                                                            <DrawingGroup>
+                                                                <DrawingGroup.Children>
+                                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M4.3818,15L0.3818,7 5.6178,7 6.4998,8.764 10.3818,1 15.6178,1 8.6178,15z" />
+                                                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M11,2L6.5,11 5,8 2,8 5,14 8,14 14,2z" />
+                                                                </DrawingGroup.Children>
+                                                            </DrawingGroup>
+                                                        </DrawingBrush.Drawing>
+                                                    </DrawingBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                        </Viewbox>
+                                    </DataTemplate>
+                                </ui:BooleanStateDataTemplateSelector.FalseTemplate>
 
-                                    <ui:BooleanStateDataTemplateSelector.NullTemplate>
-                                        <DataTemplate>
-                                            <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                                <ui:BooleanStateDataTemplateSelector.NullTemplate>
+                                    <DataTemplate>
+                                        <Viewbox Margin="-4,0,0,0" Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                                      ToolTip="Es ist unbekannt, ob der Schüler in der SchILD-Datenbank vorhanden ist.">
-                                                <Rectangle Width="16" Height="16">
-                                                    <Rectangle.Fill>
-                                                        <DrawingBrush>
-                                                            <DrawingBrush.Drawing>
-                                                                <DrawingGroup>
-                                                                    <DrawingGroup.Children>
-                                                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M10,14L6,14 6,9C6,8.232,6.29,7.531,6.765,7L4,7 4,5C4,3.262 5.682,2 8,2 10.316,2 12,3.262 12,5L12,7C12,8.304,11.164,9.416,10,9.828z" />
-                                                                        <GeometryDrawing Brush="#FF414141" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,9C7,7.897,7.897,7,9,7L9,5.203C8.84,5.115 8.495,5 8,5 7.504,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.261,3 8,3 9.738,3 11,3.841 11,5L11,7C11,8.103,10.102,9,9,9z" />
-                                                                    </DrawingGroup.Children>
-                                                                </DrawingGroup>
-                                                            </DrawingBrush.Drawing>
-                                                        </DrawingBrush>
-                                                    </Rectangle.Fill>
-                                                </Rectangle>
-                                            </Viewbox>
-                                        </DataTemplate>
-                                    </ui:BooleanStateDataTemplateSelector.NullTemplate>
-                                </ui:BooleanStateDataTemplateSelector>
-                            </GridViewColumn.CellTemplateSelector>
-                        </GridViewColumn>
-                        <GridViewColumn Header="SchILD-ID" DisplayMemberBinding="{Binding SchILDId}" />
-                        <GridViewColumn Header="Nachname" DisplayMemberBinding="{Binding LastName}" />
-                        <GridViewColumn Header="Vorname" DisplayMemberBinding="{Binding FirstName}" />
-                        <GridViewColumn Header="E-Mail Adresse" DisplayMemberBinding="{Binding Email}" />
-                        <GridViewColumn Header="Klasse" DisplayMemberBinding="{Binding Grade}" />
-                        <GridViewColumn Header="anon. Nachname" DisplayMemberBinding="{Binding AnonymousLastName}" />
-                        <GridViewColumn Header="anon. Vorname" DisplayMemberBinding="{Binding AnonymousFirstName}" />
-                        <GridViewColumn Header="anon. E-Mail Adresse" DisplayMemberBinding="{Binding AnonymousEmail}" />
-                    </GridView>
-                </ListView.View>
+                                            <Rectangle Width="16" Height="16">
+                                                <Rectangle.Fill>
+                                                    <DrawingBrush>
+                                                        <DrawingBrush.Drawing>
+                                                            <DrawingGroup>
+                                                                <DrawingGroup.Children>
+                                                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M10,14L6,14 6,9C6,8.232,6.29,7.531,6.765,7L4,7 4,5C4,3.262 5.682,2 8,2 10.316,2 12,3.262 12,5L12,7C12,8.304,11.164,9.416,10,9.828z" />
+                                                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M9,11L7,11 7,13 9,13z M9,10L7,10 7,9C7,7.897,7.897,7,9,7L9,5.203C8.84,5.115 8.495,5 8,5 7.504,5 7.159,5.115 7,5.203L7,6 5,6 5,5C5,3.841 6.261,3 8,3 9.738,3 11,3.841 11,5L11,7C11,8.103,10.102,9,9,9z" />
+                                                                </DrawingGroup.Children>
+                                                            </DrawingGroup>
+                                                        </DrawingBrush.Drawing>
+                                                    </DrawingBrush>
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                        </Viewbox>
+                                    </DataTemplate>
+                                </ui:BooleanStateDataTemplateSelector.NullTemplate>
+                            </ui:BooleanStateDataTemplateSelector>
+                        </GridViewColumn.CellTemplateSelector>
+                    </GridViewColumn>
+                    <GridViewColumn Header="SchILD-ID" DisplayMemberBinding="{Binding SchILDId}" />
+                    <GridViewColumn Header="Nachname" DisplayMemberBinding="{Binding LastName}" />
+                    <GridViewColumn Header="Vorname" DisplayMemberBinding="{Binding FirstName}" />
+                    <GridViewColumn Header="E-Mail Adresse" DisplayMemberBinding="{Binding Email}" />
+                    <GridViewColumn Header="Klasse" DisplayMemberBinding="{Binding Grade}" />
+                    <GridViewColumn Header="anon. Nachname" DisplayMemberBinding="{Binding AnonymousLastName}" />
+                    <GridViewColumn Header="anon. Vorname" DisplayMemberBinding="{Binding AnonymousFirstName}" />
+                    <GridViewColumn Header="anon. E-Mail Adresse" DisplayMemberBinding="{Binding AnonymousEmail}" />
+                </GridView>
+            </ListView.View>
 
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.ContainerStyle>
-                            <Style TargetType="GroupItem">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate>
-                                            <Expander IsExpanded="True">
-                                                <Expander.Header>
-                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewGroupHeaderStyle}" />
-                                                </Expander.Header>
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="GroupItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate>
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <TextBlock Text="{Binding Name}" Style="{StaticResource ListViewGroupHeaderStyle}" />
+                                            </Expander.Header>
 
-                                                <ItemsPresenter />
-                                            </Expander>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </GroupStyle.ContainerStyle>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-            </ListView>
-        </xceed:BusyIndicator>
+                                            <ItemsPresenter />
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
     </DockPanel>
 </fluent:RibbonWindow>

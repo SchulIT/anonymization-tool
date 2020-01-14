@@ -8,6 +8,8 @@
         <ResourceDictionary>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <converters:IsNullConverter x:Key="IsNullConverter" />
+            <converters:NullToZeroConverter x:Key="NullToZeroConverter" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <vm:ViewModelLocator x:Key="ViewModelLocator" />
 

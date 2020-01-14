@@ -236,7 +236,7 @@ namespace AnonymizationTool.ViewModels
 
         private void RunOnUI(Action action)
         {
-            App.Current.Dispatcher.Invoke(action);
+            App.Current.Dispatcher.BeginInvoke(action, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public async void LoadStudents()

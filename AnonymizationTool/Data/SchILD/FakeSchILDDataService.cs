@@ -1,7 +1,6 @@
 ﻿using AnonymizationTool.Common;
 using AnonymizationTool.Settings;
 using Bogus;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unidecode.NET;
@@ -24,12 +23,10 @@ namespace AnonymizationTool.Data.SchILD
         }
 
         private readonly ISettingsService settingsService;
-        private readonly ILogger<FakeSchILDDataService> logger;
 
-        public FakeSchILDDataService(ISettingsService settingsService, ILogger<FakeSchILDDataService> logger)
+        public FakeSchILDDataService(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-            this.logger = logger;
         }
 
         public Task ConnectAsync()

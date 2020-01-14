@@ -1,7 +1,6 @@
 ﻿using AnonymizationTool.Common;
 using AnonymizationTool.Settings;
 using Bogus;
-using Microsoft.Extensions.Logging;
 
 namespace AnonymizationTool.Anonymization
 {
@@ -12,12 +11,9 @@ namespace AnonymizationTool.Anonymization
         private readonly Faker faker;
         private readonly ISettingsService settingsService;
 
-        private readonly ILogger<BogusNameFaker> logger;
-
-        public BogusNameFaker(ISettingsService settingsService, ILogger<BogusNameFaker> logger)
+        public BogusNameFaker(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-            this.logger = logger;
 
             faker = new Faker(Locale);
         }

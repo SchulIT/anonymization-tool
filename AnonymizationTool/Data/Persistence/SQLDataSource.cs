@@ -1,6 +1,5 @@
 ﻿using AnonymizationTool.Settings;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,6 @@ namespace AnonymizationTool.Data.Persistence
         private SqlContext context = null;
 
         private ISettingsService settingsService;
-        private ILogger<SqlDataSource> logger;
 
         public event ConnectionStateChangedEventHandler<IPersistentDataSource> ConnectionStateChanged;
 
@@ -27,10 +25,9 @@ namespace AnonymizationTool.Data.Persistence
             ConnectionStateChanged?.Invoke(this, new ConnectionStateChangedEventArgs<IPersistentDataSource>(this, IsConnected));
         }
 
-        public SqlDataSource(ISettingsService settingsService, ILogger<SqlDataSource> logger)
+        public SqlDataSource(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-            this.logger = logger;
         }
 
         public async Task ConnectAsync()

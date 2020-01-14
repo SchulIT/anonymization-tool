@@ -8,7 +8,6 @@ using AnonymizationTool.UI;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,9 +69,8 @@ namespace AnonymizationTool.ViewModels
         private readonly ISchILDDataSource schILDDataSource;
         private readonly IExportService exportService;
         private readonly IDispatcher dispatcher;
-        private readonly ILogger<MainViewModel> logger;
 
-        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IExportService exportService, IDispatcher dispatcher, ILogger<MainViewModel> logger, IMessenger messenger)
+        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IExportService exportService, IDispatcher dispatcher, IMessenger messenger)
             : base(messenger)
         {
             this.studentFaker = studentFaker;
@@ -80,7 +78,6 @@ namespace AnonymizationTool.ViewModels
             this.schILDDataSource = schILDDataSource;
             this.exportService = exportService;
             this.dispatcher = dispatcher;
-            this.logger = logger;
 
             LoadStudentsCommand = new RelayCommand(LoadStudents, CanLoadStudents);
             SyncCommand = new RelayCommand(Sync, CanSync);

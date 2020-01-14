@@ -5,7 +5,6 @@ using AnonymizationTool.Settings;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,17 +76,15 @@ namespace AnonymizationTool.ViewModels
         private readonly IPersistentDataSource persistentDataSource;
         private readonly ISchILDDataSource schILDDataSource;
         private readonly ISettingsService settingsService;
-        private readonly ILogger<SettingsViewModel> logger;
 
         #endregion
 
-        public SettingsViewModel(IPersistentDataSource persistentDataSource, ISchILDDataSource schILDDataSource, ISettingsService settingsService, ILogger<SettingsViewModel> logger, IMessenger messenger)
+        public SettingsViewModel(IPersistentDataSource persistentDataSource, ISchILDDataSource schILDDataSource, ISettingsService settingsService, IMessenger messenger)
             : base(messenger)
         {
             this.persistentDataSource = persistentDataSource;
             this.schILDDataSource = schILDDataSource;
             this.settingsService = settingsService;
-            this.logger = logger;
 
             SaveCommand = new RelayCommand(Save, CanSave);
             ConnectSchILDCommand = new RelayCommand(ConnectSchILD, CanConnectSchILD);

@@ -6,8 +6,6 @@ using AnonymizationTool.Settings;
 using AnonymizationTool.UI;
 using Autofac;
 using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
 using static AnonymizationTool.Settings.IEmailSettings;
 
 namespace AnonymizationTool.ViewModels
@@ -24,9 +22,6 @@ namespace AnonymizationTool.ViewModels
         public static void RegisterServices()
         {
             var builder = new ContainerBuilder();
-
-            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
-            builder.RegisterType<NLogLoggerFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             //builder.RegisterType<FakeSchILDDataService>().As<ISchILDDataSource>().SingleInstance();
             builder.RegisterType<OdbcSchILDDataSource>().As<ISchILDDataSource>().SingleInstance();

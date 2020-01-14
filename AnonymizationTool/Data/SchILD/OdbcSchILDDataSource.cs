@@ -1,7 +1,5 @@
 ﻿using AnonymizationTool.Common;
 using AnonymizationTool.Settings;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Threading.Tasks;
@@ -29,12 +27,10 @@ namespace AnonymizationTool.Data.SchILD
         #endregion
 
         private readonly ISettingsService settingsService;
-        private readonly ILogger<OdbcSchILDDataSource> logger;
 
-        public OdbcSchILDDataSource(ISettingsService settingsService, ILogger<OdbcSchILDDataSource> logger)
+        public OdbcSchILDDataSource(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-            this.logger = logger;
         }
 
         public async Task ConnectAsync()

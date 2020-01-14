@@ -451,7 +451,8 @@
 
 
 
-        <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+        <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                  VirtualizingPanel.IsVirtualizingWhenGrouping="True">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="" Width="22">

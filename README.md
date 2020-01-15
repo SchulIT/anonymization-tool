@@ -20,6 +20,16 @@ Damit das Tool mit Access kommunizieren kann, wird das Access Database Engine Re
 
 ## Installation
 
+Das Programm kann entweder direkt als EXE gestartet oder via MSI installiert werden. 
+
+### Startbare EXE
+
+Wer das Programm nicht installieren kann oder möchte, kann einfach die [aktuelle Programmversion als EXE](https://github.com/SchulIT/anonymization-tool/releases) herunterladen und per Doppelklick starten. 
+
+**Achtung:** Das Tool ist nicht **nicht** portabel, da es Einstellungen in `C:\ProgramData\SchulIT\AnonymizationTool` ablegt.
+
+### Installer
+
 Einfach den [aktuellen Installer](https://github.com/SchulIT/anonymization-tool/releases) herunterladen und starten. Falls das Programm bereits installiert ist, wird es automatisch aktualisiert.
 
 Das Programm ist in .NET Core 3 geschrieben und bringt die entsprechende Runtime direkt mit, sodass diese nicht separat installiert werden muss.

@@ -10,7 +10,7 @@ Mithilfe dieses Tools lassen sich Schülerinnen und Schüler aus SchILD-NRW impo
 
 ## Voraussetzungen
 
-Aktuell funktioniert das Tool nur, wenn SchILD mit einer Access-Datenbank betrieben wird. Perspektisch soll jedoch auch Microsoft SQL und MySQL unterstützt werden.
+Aktuell funktioniert das Tool nur, wenn SchILD mit einer Access-Datenbank betrieben wird. Perspektivisch soll jedoch auch Microsoft SQL und MySQL unterstützt werden.
 
 Damit das Tool mit Access kommunizieren kann, wird das Access Database Engine Redistributable in der entsprechenden Version benötigt.
 
@@ -70,7 +70,7 @@ Server=server\sqlexpress;Database=AnonymizationTool;Integrated Security=True
 
 * `Server`: Hier wird der Pfad zur SQL-Server-Instanz (i.d.R. ist `server` der Computername, `sqlexpress` ist der Instanzname bei SQL Server Express)
 * `Database`: Hier den gewünschten Datenbanknamen eintragen. Die Datenbank wird automatisch erstellt.
-* `Integrated Security=True`: So wird der aktuelle Benutzername zur Verbindung. Alternativ lassen sich mit `User=$username%; Password=$password$ auch Benutzername und Passwort separat festlegen.
+* `Integrated Security=True`: So wird der aktuelle Benutzername zur Verbindung. Alternativ lassen sich mit `User=$username%; Password=$password$` auch Benutzername und Passwort separat festlegen (anstelle von `Integrated Security=True`).
 
 #### MySQL
 
@@ -98,6 +98,10 @@ Nach Schritt 2 ist es auch möglich, Schülerinnen und Schüler, die nicht mehr 
 ## Export
 
 Anonyme Identitäten können als CSV-Datei exportiert werden, um sie dann weiterzuverarbeiten. 
+
+## Probleme?
+
+Dann bitte in den [Issue schauen](https://github.com/SchulIT/anonymization-tool/issues), ob das Problem bereits bekannt ist. Falls nicht, kann dort ein Issue geöffnet werden. Support via E-Mail wird nicht angeboten.
 
 ## Projekt selber bauen
 

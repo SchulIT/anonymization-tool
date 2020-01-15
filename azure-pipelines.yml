@@ -17,7 +17,7 @@ variables:
   solution: 'AnonymizationTool.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
-  buildPlatform: 'win-x64'
+  dotnetPlatform: 'win-x64'
 
 steps:
 - checkout: self
@@ -50,7 +50,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: build self-containing exe
   inputs:
-    arguments: -c $(buildConfiguration) -r $(buildPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
+    arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
     workingDirectory: AnonymizationTool
 
 - task: GitHubRelease@0
@@ -60,5 +60,5 @@ steps:
     repositoryName: schulit/anonymization-tool
     assets: |
       'setup-*.msi'
-      'AnonymizationTool/bin/Release/netcoreapp3.0/$(buildPlatform)/publish/*.exe'
+      'AnonymizationTool/bin/Release/netcoreapp3.0/$(dotnetPlatform)/publish/*.exe'
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))

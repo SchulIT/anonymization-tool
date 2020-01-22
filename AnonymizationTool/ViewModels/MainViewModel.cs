@@ -290,7 +290,7 @@ namespace AnonymizationTool.ViewModels
 
         public async void LoadStudents()
         {
-            if(dataSource.CanConnect)
+            if(dataSource.CanConnect == false)
             {
                 Messenger.Send(new DialogMessage { Title = "Datenbankverbindung", Header = "Datenbankverbindung", Text = "Bitte die Einstellungen für die interne Datenbank überprüfen." });
                 return;

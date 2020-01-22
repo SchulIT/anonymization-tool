@@ -55,4 +55,8 @@
     <ProjectReference Include="..\TaskDialog\TaskDialog\TaskDialog.csproj" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet-project-licenses -i . -u -o -j" />
+  </Target>
+
 </Project>

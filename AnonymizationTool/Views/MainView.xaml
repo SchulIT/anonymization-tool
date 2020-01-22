@@ -399,9 +399,36 @@
                 </fluent:RibbonGroupBox>
 
                 <fluent:RibbonGroupBox Header="Anonymisierung">
-                    <fluent:Button Header="Schüler anonymisieren" Command="{Binding AnonymizeCommand}">
+                    <fluent:Button Header="Ausgewählte Schüler anonymisieren" Command="{Binding AnonymizeSelectedStudentsCommand}">
                         <fluent:Button.ToolTip>
-                            <fluent:ScreenTip Title="Schüler anonymisieren"
+                            <fluent:ScreenTip Title="Ausgewählte Schüler anonymisieren"
+                                              Text="Erzeugt für alle ausgewählten Schüler anonyme Identitäten. Falls ein Schüler bereits eine anonyme Identität besitzt, wird keien neue generiert." />
+                        </fluent:Button.ToolTip>
+
+                        <fluent:Button.LargeIcon>
+                            <Viewbox Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                <Rectangle Width="32" Height="32">
+                                    <Rectangle.Fill>
+                                        <DrawingBrush>
+                                            <DrawingBrush.Drawing>
+                                                <DrawingGroup>
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M29,10L24.5,10C25.453,8.938 26,7.539 26,6 26,2.686 23.314,0 20,0 16.687,0 14,2.686 14,6 14,7.539 14.548,8.938 15.5,10L11,10 11,14.268C10.37,14.094 9.7,14 9,14 5.328,14 2.439,16.619 2,20L2,32 16,32 16,24 29,24z" />
+                                                        <GeometryDrawing Brush="#FF424242" Geometry="F1M9,16C6.256,16,4.299,17.709,4,20L6,20C6.279,18.945 7.311,18 9,18 10.641,18 11.705,18.94 12,20L14,20C13.721,17.707,11.746,16,9,16 M8,28L10,28 10,24 8,24z M4,22L14,22 14,30 4,30z M21,18.001C21,17.447 20.551,17 20,17 19.447,17 19,17.447 19,18.001 19,18.553 19.447,19 20,19 20.551,19 21,18.553 21,18.001 M27,12L27,22 16,22 16,20C15.756,17.99,14.638,16.261,13,15.181L13,12 17,12 20,15 23,12z M16,6C16,3.792 17.791,2 20,2 22.207,2 24,3.792 24,6 24,8.208 22.207,10 20,10 17.791,10 16,8.208 16,6" />
+                                                        <GeometryDrawing Brush="#FFF0EFF1" Geometry="F1M8,28L10,28 10,24 8,24z M21,18.001C21,18.553 20.551,19 20,19 19.447,19 19,18.553 19,18.001 19,17.447 19.447,17 20,17 20.551,17 21,17.447 21,18.001" />
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Viewbox>
+                        </fluent:Button.LargeIcon>
+                    </fluent:Button>
+
+                    <fluent:Button Header="Alle Schüler anonymisieren" Command="{Binding AnonymizeCommand}">
+                        <fluent:Button.ToolTip>
+                            <fluent:ScreenTip Title="Alle Schüler anonymisieren"
                                               Text="Erzeugt für alle Schüler anonyme Identitäten. Falls ein Schüler bereits eine anonyme Identität besitzt, wird keien neue generiert." />
                         </fluent:Button.ToolTip>
                         

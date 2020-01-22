@@ -9,7 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,6 +32,8 @@ namespace AnonymizationTool.ViewModels
                 LoadStudentsCommand?.RaiseCanExecuteChanged();
                 SyncCommand?.RaiseCanExecuteChanged();
                 RemoveNonActiveStudentsCommand?.RaiseCanExecuteChanged();
+                AnonymizeSelectedStudentsCommand?.RaiseCanExecuteChanged();
+                RemoveSelectedStudentsCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -57,11 +59,14 @@ namespace AnonymizationTool.ViewModels
 
         public RangeObservableCollection<AnonymousStudent> Students { get; } = new RangeObservableCollection<AnonymousStudent>();
 
-        public ObservableCollection<AnonymousStudent> SelectedStudents { get; } = new ObservableCollection<AnonymousStudent>();
+        public RangeObservableCollection<AnonymousStudent> SelectedStudents { get; } = new RangeObservableCollection<AnonymousStudent>();
 
         public RelayCommand LoadStudentsCommand { get; private set; }
         public RelayCommand SyncCommand { get; private set; }
         public RelayCommand AnonymizeCommand { get; private set; }
+
+        public RelayCommand AnonymizeSelectedStudentsCommand { get; private set; }
+
         public RelayCommand RemoveNonActiveStudentsCommand { get; private set; }
 
         public RelayCommand RemoveSelectedStudentsCommand { get; private set; }
@@ -86,6 +91,7 @@ namespace AnonymizationTool.ViewModels
             LoadStudentsCommand = new RelayCommand(LoadStudents, CanLoadStudents);
             SyncCommand = new RelayCommand(Sync, CanSync);
             AnonymizeCommand = new RelayCommand(Anonymize, CanAnonymize);
+            AnonymizeSelectedStudentsCommand = new RelayCommand(AnomyizeSelectedStudents, CanAnonymizeSelectedStudents);
             RemoveNonActiveStudentsCommand = new RelayCommand(RemoveNonActive, CanRemoveNonActive);
             RemoveSelectedStudentsCommand = new RelayCommand(RemoveSelected, CanRemoveSelected);
             ExportCommand = new RelayCommand(Export, CanExport);
@@ -99,7 +105,8 @@ namespace AnonymizationTool.ViewModels
 
             SelectedStudents.CollectionChanged += (sender, args) =>
             {
-                RemoveSelectedStudentsCommand.RaiseCanExecuteChanged();
+                RemoveSelectedStudentsCommand?.RaiseCanExecuteChanged();
+                AnonymizeSelectedStudentsCommand?.RaiseCanExecuteChanged();
             };
 
             dataSource.ConnectionStateChanged += (sender, args) =>
@@ -232,24 +239,37 @@ namespace AnonymizationTool.ViewModels
             return SelectedStudents != null && SelectedStudents.Count > 0;
         }
 
-        private async void Anonymize()
+        private void Anonymize()
+        {
+            InternalAnonymize(Students);
+        }
+
+        private bool CanAnonymize()
+        {
+            return !IsBusy && dataSource.IsConnected && Students.Count > 0;
+        }
+
+        private async void InternalAnonymize(IEnumerable<AnonymousStudent> students)
         {
             try
             {
                 IsBusy = true;
                 BusyProgress = null;
-                BusyMessage = "Anonymisiere Schüler...";
+                BusyMessage = "Anonymisiere ausgewählte Schüler...";
 
                 // Create a working copy of all students (because we want to update the UI afterwards)
-                var databaseStudents = Students.ToList();
+                var allStudents = Students.ToList();
+                var selectedStudents = SelectedStudents.ToList();
+
+                SelectedStudents.Clear();
                 Students.Clear();
 
                 await Task.Factory.StartNew(() =>
                 {
                     var currentStudentIdx = 0;
-                    var studentsCount = (double)databaseStudents.Count;
+                    var studentsCount = (double)students.Count();
 
-                    foreach (var student in databaseStudents)
+                    foreach (var student in students)
                     {
                         int attempt = 0;
                         do
@@ -271,7 +291,8 @@ namespace AnonymizationTool.ViewModels
 
                 await dataSource.SaveChangesAsync();
 
-                Students.AddRange(databaseStudents);
+                Students.AddRange(allStudents);
+                SelectedStudents.AddRange(selectedStudents);
             }
             catch (Exception e)
             {
@@ -283,9 +304,14 @@ namespace AnonymizationTool.ViewModels
             }
         }
 
-        private bool CanAnonymize()
+        private void AnomyizeSelectedStudents()
         {
-            return !IsBusy && dataSource.IsConnected && Students.Count > 0;
+            InternalAnonymize(SelectedStudents.ToList());
+        }
+
+        private bool CanAnonymizeSelectedStudents()
+        {
+            return !IsBusy && dataSource.IsConnected && SelectedStudents.Count > 0;
         }
 
         public async void LoadStudents()

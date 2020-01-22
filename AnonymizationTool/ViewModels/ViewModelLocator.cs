@@ -26,6 +26,7 @@ namespace AnonymizationTool.ViewModels
 
             builder.RegisterType<AccessOdbcSchILDDataSource>().AsSelf().Keyed<ISchILDDataSource>(DatabaseType.Access).SingleInstance();
             builder.RegisterType<MssqlSchILDDataSource>().AsSelf().Keyed<ISchILDDataSource>(DatabaseType.MSSQL).SingleInstance();
+            builder.RegisterType<MysqlSchILDDataSource>().AsSelf().Keyed<ISchILDDataSource>(DatabaseType.MySQL).SingleInstance();
             builder.RegisterType<SchILDDataSourceResolverDataSource>().As<ISchILDDataSource>().SingleInstance();
 
             builder.RegisterType<SqlDataSource>().As<IPersistentDataSource>().SingleInstance();

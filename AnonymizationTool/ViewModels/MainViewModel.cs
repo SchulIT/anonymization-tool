@@ -9,6 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace AnonymizationTool.ViewModels
                 AnonymizeCommand?.RaiseCanExecuteChanged();
                 LoadStudentsCommand?.RaiseCanExecuteChanged();
                 SyncCommand?.RaiseCanExecuteChanged();
-                RemoveCommand?.RaiseCanExecuteChanged();
+                RemoveNonActiveStudentsCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -56,13 +57,16 @@ namespace AnonymizationTool.ViewModels
 
         public RangeObservableCollection<AnonymousStudent> Students { get; } = new RangeObservableCollection<AnonymousStudent>();
 
+        public ObservableCollection<AnonymousStudent> SelectedStudents { get; } = new ObservableCollection<AnonymousStudent>();
+
         public RelayCommand LoadStudentsCommand { get; private set; }
         public RelayCommand SyncCommand { get; private set; }
         public RelayCommand AnonymizeCommand { get; private set; }
-        public RelayCommand RemoveCommand { get; private set; }
+        public RelayCommand RemoveNonActiveStudentsCommand { get; private set; }
+
+        public RelayCommand RemoveSelectedStudentsCommand { get; private set; }
 
         public RelayCommand ExportCommand { get; private set; }
-
 
         private IStudentFaker studentFaker;
         private readonly IPersistentDataSource dataSource;
@@ -82,14 +86,20 @@ namespace AnonymizationTool.ViewModels
             LoadStudentsCommand = new RelayCommand(LoadStudents, CanLoadStudents);
             SyncCommand = new RelayCommand(Sync, CanSync);
             AnonymizeCommand = new RelayCommand(Anonymize, CanAnonymize);
-            RemoveCommand = new RelayCommand(Remove, CanRemove);
+            RemoveNonActiveStudentsCommand = new RelayCommand(RemoveNonActive, CanRemoveNonActive);
+            RemoveSelectedStudentsCommand = new RelayCommand(RemoveSelected, CanRemoveSelected);
             ExportCommand = new RelayCommand(Export, CanExport);
 
             Students.CollectionChanged += (sender, args) =>
             {
                 AnonymizeCommand?.RaiseCanExecuteChanged();
-                RemoveCommand?.RaiseCanExecuteChanged();
+                RemoveNonActiveStudentsCommand?.RaiseCanExecuteChanged();
                 ExportCommand?.RaiseCanExecuteChanged();
+            };
+
+            SelectedStudents.CollectionChanged += (sender, args) =>
+            {
+                RemoveSelectedStudentsCommand.RaiseCanExecuteChanged();
             };
 
             dataSource.ConnectionStateChanged += (sender, args) =>
@@ -139,7 +149,7 @@ namespace AnonymizationTool.ViewModels
             return Students.Count > 0;
         }
 
-        private async void Remove()
+        private async void RemoveNonActive()
         {
             try
             {
@@ -171,9 +181,55 @@ namespace AnonymizationTool.ViewModels
             }
         }
 
-        private bool CanRemove()
+        private bool CanRemoveNonActive()
         {
             return !IsBusy && dataSource.IsConnected && Students.Count > 0 && Students.Any(s => s.IsMissingInSchILD == true);
+        }
+
+        private async void RemoveSelected()
+        {
+            try
+            {
+                IsBusy = true;
+                BusyMessage = "Ausgewählte Schüler löschen...";
+                BusyProgress = 0;
+
+                await Task.Factory.StartNew(() =>
+                {
+                    var currentStudentIdx = 0;
+                    var studentsCount = SelectedStudents.Count;
+
+                    foreach (var student in SelectedStudents)
+                    {
+                        dataSource.RemoveStudent(student);
+
+                        // Update progressbar
+                        dispatcher.RunOnUI(() => BusyProgress = (currentStudentIdx / studentsCount) * 100);
+                        currentStudentIdx++;
+                    }
+                }, TaskCreationOptions.LongRunning);
+
+                BusyProgress = null;
+                BusyMessage = "Speichere Änderungen in der internen Datenbank...";
+
+                await dataSource.SaveChangesAsync();
+
+                SelectedStudents.Clear();
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorDialogMessage { Exception = e, Title = "Fehler", Header = "Fehler beim Löschen der Schüler", Text = "Beim Löschen der Schüler ausgewählten ist ein Fehler aufgetreten." });
+            }
+            finally
+            {
+                IsBusy = false;
+                BusyMessage = string.Empty;
+            }
+        }
+
+        private bool CanRemoveSelected()
+        {
+            return SelectedStudents != null && SelectedStudents.Count > 0;
         }
 
         private async void Anonymize()

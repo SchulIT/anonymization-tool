@@ -41,6 +41,7 @@
     <PackageReference Include="Fluent.Ribbon" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
     <PackageReference Include="MvvmLightStd10" Version="5.4.1.2" />
     <PackageReference Include="NaturalSort.Extension" Version="2.1.0" />
@@ -53,9 +54,5 @@
   <ItemGroup>
     <ProjectReference Include="..\TaskDialog\TaskDialog\TaskDialog.csproj" />
   </ItemGroup>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="dotnet-project-licenses -i . -u -o -j&#xD;&#xA;" />
-  </Target>
 
 </Project>

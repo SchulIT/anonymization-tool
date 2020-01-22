@@ -7,6 +7,8 @@
     xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:converters="clr-namespace:AnonymizationTool.Converters"
     xmlns:selectors="clr-namespace:AnonymizationTool.Selectors"
+                     xmlns:behaviors="clr-namespace:AnonymizationTool.Behaviors"
+                     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     mc:Ignorable="d"
     Title="Anonymisierungs-Tool" Height="500" Width="1000"
     DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Main}">
@@ -337,12 +339,40 @@
                         </fluent:Button.LargeIcon>
                     </fluent:Button>
 
-                    <fluent:Button Header="Alte Schüler löschen" Command="{Binding RemoveCommand}">
+                    <fluent:Button Header="Alte Schüler löschen" Command="{Binding RemoveNonActiveStudentsCommand}">
                         <fluent:Button.ToolTip>
                             <fluent:ScreenTip Title="Alte Schüler löschen"
                                               Text="Löscht alle Schüler, die nicht mehr in SchILD vorhanden sind, aus der internen Datenbank." />
                         </fluent:Button.ToolTip>
-                        
+
+                        <fluent:Button.LargeIcon>
+                            <Viewbox Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                <Rectangle Width="16" Height="16">
+                                    <Rectangle.Fill>
+                                        <DrawingBrush>
+                                            <DrawingBrush.Drawing>
+                                                <DrawingGroup>
+                                                    <DrawingGroup.Children>
+                                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M16,9L16,16 7,16 7,9 8.225,9 5.111,6.295 3.063,8.544C2.7,8.911 2.253,9.13 1.779,9.13 1.305,9.13 0.856999999999999,8.942 0.519,8.601 -0.178000000000001,7.894 -0.178000000000001,6.789 0.519,6.082L2.762,4.108 1.646,3.067C0.928000000000001,2.34 0.93,1.208 1.622,0.516 1.943,0.192 2.409,0.00399999999999956 2.898,0.00399999999999956 3.399,0.00399999999999956 3.866,0.208 4.178,0.563000000000001L5.22,1.956 7.709,0 10.666,0 7.128,4.09 8.19,5.413C8.649,4.015 9.949,3 11.5,3 13.434,3 15,4.566 15,6.5 15,7.48 14.65,8.365 14,9z" />
+                                                        <GeometryDrawing Brush="#FF424242" Geometry="F1M13,10L11.5,12 10,10 8,10 8,15 15,15 15,10z M11.5,4C12.879,4 14,5.12 14,6.5 14,7.881 12.879,9 11.5,9 11.339,9 11.183,8.982 11.031,8.953L9.007,6.431C9.044,5.084,10.143,4,11.5,4" />
+                                                        <GeometryDrawing Brush="#FFA1260C" Geometry="F1M5.834,4.1294L8.5,1.0004 8.055,1.0004 5.032,3.3754 3.427,1.2234C3.152,0.910400000000001 2.598,0.9524 2.329,1.2234 2.051,1.5014 1.995,1.9984 2.329,2.3364L4.25,4.1294 1.23,6.7854C0.923999999999999,7.0954 0.923999999999999,7.5874 1.23,7.8974 1.537,8.2074 2.021,8.2074 2.329,7.8974L5.042,4.9584 8.605,8.1254 9,8.1254z" />
+                                                    </DrawingGroup.Children>
+                                                </DrawingGroup>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Viewbox>
+                        </fluent:Button.LargeIcon>
+                    </fluent:Button>
+
+                    <fluent:Button Header="Ausgewählte Schüler löschen" Command="{Binding RemoveSelectedStudentsCommand}">
+                        <fluent:Button.ToolTip>
+                            <fluent:ScreenTip Title="Ausgewählte Schüler löschen"
+                                              Text="Löscht alle ausgewählten Schüler aus der internen Datenbank." />
+                        </fluent:Button.ToolTip>
+
                         <fluent:Button.LargeIcon>
                             <Viewbox Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
                                 <Rectangle Width="16" Height="16">
@@ -453,6 +483,9 @@
 
         <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                   VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+            <b:Interaction.Behaviors>
+                <behaviors:SelectedItemsBehavior SelectedItems="{Binding SelectedItems}" />
+            </b:Interaction.Behaviors>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="" Width="22">

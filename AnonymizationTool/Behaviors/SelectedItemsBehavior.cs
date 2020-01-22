@@ -42,14 +42,34 @@ namespace AnonymizationTool.Behaviors
                 return;
             }
 
-            foreach(var addedItem in e.NewItems)
+            if (e.NewItems != null)
             {
-                AssociatedObject.SelectedItems.Add(addedItem);
+                foreach (var addedItem in e.NewItems)
+                {
+                    AssociatedObject.SelectedItems.Add(addedItem);
+                }
             }
 
-            foreach(var removedItem in e.OldItems)
+            if (e.OldItems != null)
             {
-                AssociatedObject.SelectedItems.Remove(removedItem);
+                foreach (var removedItem in e.OldItems)
+                {
+                    AssociatedObject.SelectedItems.Remove(removedItem);
+                }
+            }
+
+            var collection = sender as ICollection;
+
+            if(e.Action == NotifyCollectionChangedAction.Reset && collection != null)
+            {
+                suppressBoundCollectionChangedEvent = true;
+
+                foreach (var item in collection)
+                {
+                    AssociatedObject.SelectedItems.Add(item);
+                }
+
+                suppressBoundCollectionChangedEvent = false;
             }
         }
 
@@ -75,6 +95,11 @@ namespace AnonymizationTool.Behaviors
 
         private void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(suppressBoundCollectionChangedEvent)
+            {
+                return;
+            }
+
             var boundList = SelectedItems as IList;
 
             if(boundList == null)

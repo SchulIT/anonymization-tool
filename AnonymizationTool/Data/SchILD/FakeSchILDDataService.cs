@@ -13,36 +13,11 @@ namespace AnonymizationTool.Data.SchILD
 
         public bool CanConnect { get { return true; } }
 
-        public bool IsConnected { get; private set; }
-
-        public event ConnectionStateChangedEventHandler<ISchILDDataSource> ConnectionStateChanged;
-
-        private void OnConnectionStateChanged()
-        {
-            ConnectionStateChanged?.Invoke(this, new ConnectionStateChangedEventArgs<ISchILDDataSource>(this, IsConnected));
-        }
-
         private readonly ISettingsService settingsService;
 
         public FakeSchILDDataService(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
-        }
-
-        public Task ConnectAsync()
-        {
-            IsConnected = true;
-            OnConnectionStateChanged();
-
-            return Task.CompletedTask;
-        }
-
-        public Task DisconnectAsync()
-        {
-            IsConnected = false;
-            OnConnectionStateChanged();
-
-            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<Student>> LoadStudentsAsync()
@@ -68,6 +43,11 @@ namespace AnonymizationTool.Data.SchILD
         public bool IsSupported(DatabaseType type)
         {
             return true;
+        }
+
+        public Task TestConnectionAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }

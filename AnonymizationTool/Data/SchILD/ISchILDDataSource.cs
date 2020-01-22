@@ -5,7 +5,7 @@ namespace AnonymizationTool.Data.SchILD
 {
     public interface ISchILDDataSource : IDataSource
     {
-        event ConnectionStateChangedEventHandler<ISchILDDataSource> ConnectionStateChanged;
+        Task TestConnectionAsync();
 
         Task<IEnumerable<Student>> LoadStudentsAsync();
     }

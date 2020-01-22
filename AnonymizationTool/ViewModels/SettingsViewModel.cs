@@ -104,8 +104,7 @@ namespace AnonymizationTool.ViewModels
             {
                 IsConnecting = true;
 
-                await schILDDataSource.ConnectAsync();
-                await schILDDataSource.DisconnectAsync();
+                await schILDDataSource.TestConnectionAsync();
 
                 Messenger.Send(new DialogMessage { Title = "Verbindung erfolgreich", Header = "Verbindung erfolgreich", Text = "Es wurde erfolgreich eine Verbindung zur SchILD-Datenbank aufgebaut" });
             }
@@ -121,7 +120,7 @@ namespace AnonymizationTool.ViewModels
 
         private bool CanConnectSchILD()
         {
-            return IsConnecting == false && Settings.SchILDConnection.Type == DatabaseType.Access;
+            return IsConnecting == false && schILDDataSource.CanConnect;
         }
 
         private async void ConnectDataSource()
@@ -184,6 +183,8 @@ namespace AnonymizationTool.ViewModels
             {
                 IsSaving = true;
                 await settingsService.SaveAsync();
+                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
+                ConnectSchILDCommand?.RaiseCanExecuteChanged();
             }
             finally
             {

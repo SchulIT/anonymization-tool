@@ -6,12 +6,6 @@ namespace AnonymizationTool.Data
     {
         bool CanConnect { get; }
 
-        bool IsConnected { get; }
-
-        Task ConnectAsync();
-
-        Task DisconnectAsync();
-
         bool IsSupported(DatabaseType type);
     }
 }

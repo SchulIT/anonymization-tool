@@ -5,7 +5,13 @@ namespace AnonymizationTool.Data.Persistence
 {
     public interface IPersistentDataSource : IDataSource
     {
+        bool IsConnected { get; }
+
         event ConnectionStateChangedEventHandler<IPersistentDataSource> ConnectionStateChanged;
+
+        Task ConnectAsync();
+
+        Task DisconnectAsync();
 
         void AddStudent(AnonymousStudent student);
 

@@ -335,10 +335,6 @@ namespace AnonymizationTool.ViewModels
             {
                 IsBusy = true;
                 BusyProgress = null;
-                BusyMessage = "Verbinde zur SchILD Datenbank...";
-
-                await schILDDataSource.ConnectAsync();
-
                 BusyMessage = "Lade Schüler aus Datenbank...";
 
                 var schildStudents = await schILDDataSource.LoadStudentsAsync();
@@ -403,7 +399,6 @@ namespace AnonymizationTool.ViewModels
             }
             finally
             {
-                await schILDDataSource.DisconnectAsync();
                 IsBusy = false;
             }
         }

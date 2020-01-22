@@ -1,4 +1,5 @@
 ﻿using AnonymizationTool.Anonymization;
+using AnonymizationTool.Data;
 using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
@@ -23,8 +24,10 @@ namespace AnonymizationTool.ViewModels
         {
             var builder = new ContainerBuilder();
 
-            //builder.RegisterType<FakeSchILDDataService>().As<ISchILDDataSource>().SingleInstance();
-            builder.RegisterType<OdbcSchILDDataSource>().As<ISchILDDataSource>().SingleInstance();
+            builder.RegisterType<AccessOdbcSchILDDataSource>().AsSelf().Keyed<ISchILDDataSource>(DatabaseType.Access).SingleInstance();
+            builder.RegisterType<MssqlSchILDDataSource>().AsSelf().Keyed<ISchILDDataSource>(DatabaseType.MSSQL).SingleInstance();
+            builder.RegisterType<SchILDDataSourceResolverDataSource>().As<ISchILDDataSource>().SingleInstance();
+
             builder.RegisterType<SqlDataSource>().As<IPersistentDataSource>().SingleInstance();
             builder.RegisterType<JsonSettingsService>().As<ISettingsService>().SingleInstance().OnActivating(s => s.Instance.LoadSettings());
 

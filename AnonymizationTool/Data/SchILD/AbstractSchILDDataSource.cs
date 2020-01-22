@@ -9,7 +9,7 @@ namespace AnonymizationTool.Data.SchILD
     {
         protected abstract DatabaseType Type { get; }
 
-        public virtual bool CanConnect { get { return settingsService.Settings.SchILDConnection.Type == DatabaseType.MSSQL && !string.IsNullOrEmpty(settingsService.Settings.SchILDConnection.ConnectionString); } }
+        public virtual bool CanConnect { get { return IsSupported(settingsService.Settings.SchILDConnection.Type) && !string.IsNullOrEmpty(settingsService.Settings.SchILDConnection.ConnectionString); } }
 
         private ISettingsService settingsService;
 

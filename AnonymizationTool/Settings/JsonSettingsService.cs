@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -11,7 +12,9 @@ namespace AnonymizationTool.Settings
         public const string ApplicationName = "AnonymizationTool";
         public const string ApplicationVendor = "SchulIT";
 
-        public ISettings Settings { get; private set; }
+        private JsonSettings jsonSettings;
+
+        public ISettings Settings { get { return jsonSettings; } }
 
         public event SettingsChangedEventHandler Changed;
 
@@ -22,6 +25,11 @@ namespace AnonymizationTool.Settings
 
         public void LoadSettings()
         {
+            if(jsonSettings != null)
+            {
+                jsonSettings.PropertyChanged -= OnJsonSettingsPropertyChanged;
+            }
+
             var path = GetPath();
             var directory = Path.GetDirectoryName(path);
 
@@ -42,15 +50,24 @@ namespace AnonymizationTool.Settings
             using (var reader = new StreamReader(path))
             {
                 var json = reader.ReadToEnd();
-                var settings = JsonConvert.DeserializeObject<JsonSettings>(json);
-                Settings = settings;
+                jsonSettings = JsonConvert.DeserializeObject<JsonSettings>(json);
             }
 
             // Write settings back to create possibly missing new setting items
             using (var writer = new StreamWriter(path))
             {
-                writer.Write(JsonConvert.SerializeObject(Settings, Formatting.Indented));
+                writer.Write(JsonConvert.SerializeObject(jsonSettings, Formatting.Indented));
             }
+
+            if (jsonSettings != null)
+            {
+                jsonSettings.PropertyChanged += OnJsonSettingsPropertyChanged;
+            }
+        }
+
+        private async void OnJsonSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            await SaveAsync();
         }
 
         private string GetPath()

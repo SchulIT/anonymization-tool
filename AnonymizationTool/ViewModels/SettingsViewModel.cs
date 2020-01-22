@@ -25,29 +25,35 @@ namespace AnonymizationTool.ViewModels
             set { Set(() => Settings, ref settings, value); }
         }
 
-        private bool isSaving;
+        private bool isConnectionSchILD;
 
-        public bool IsSaving
+        /// <summary>
+        /// Flag whether we are currently connecting to the SchILD database
+        /// </summary>
+        public bool IsConnectingSchILD
         {
-            get { return isSaving; }
+            get { return isConnectionSchILD; }
             set
             {
-                Set(() => IsSaving, ref isSaving, value);
-                SaveCommand?.RaiseCanExecuteChanged();
+                Set(() => IsConnectingSchILD, ref isConnectionSchILD, value);
+
+                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
+                ConnectSchILDCommand?.RaiseCanExecuteChanged();
             }
         }
 
-        private bool isConnection;
+        private bool isConnectionInternal;
 
         /// <summary>
-        /// Flag whether we are currently connecting to our internal database
+        /// Flag whether we are currently connecting to the internal database
         /// </summary>
-        public bool IsConnecting
+        public bool IsConnectingInternal
         {
-            get { return isConnection; }
+            get { return isConnectionSchILD; }
             set
             {
-                Set(() => IsConnecting, ref isConnection, value);
+                Set(() => IsConnectingInternal, ref isConnectionInternal, value);
+
                 ConnectDataSourceCommand?.RaiseCanExecuteChanged();
                 ConnectSchILDCommand?.RaiseCanExecuteChanged();
             }
@@ -64,8 +70,6 @@ namespace AnonymizationTool.ViewModels
         #endregion
 
         #region Commands
-
-        public RelayCommand SaveCommand { get; private set; }
 
         public RelayCommand ConnectSchILDCommand { get; private set; }
 
@@ -88,7 +92,6 @@ namespace AnonymizationTool.ViewModels
             this.schILDDataSource = schILDDataSource;
             this.settingsService = settingsService;
 
-            SaveCommand = new RelayCommand(Save, CanSave);
             ConnectSchILDCommand = new RelayCommand(ConnectSchILD, CanConnectSchILD);
             ConnectDataSourceCommand = new RelayCommand(ConnectDataSource, CanConnectDataSource);
 
@@ -102,7 +105,7 @@ namespace AnonymizationTool.ViewModels
         {
             try
             {
-                IsConnecting = true;
+                IsConnectingSchILD = true;
 
                 await schILDDataSource.TestConnectionAsync();
 
@@ -114,20 +117,20 @@ namespace AnonymizationTool.ViewModels
             }
             finally
             {
-                IsConnecting = false;
+                IsConnectingSchILD = false;
             }
         }
 
         private bool CanConnectSchILD()
         {
-            return IsConnecting == false && schILDDataSource.CanConnect;
+            return IsConnectingSchILD == false && IsConnectingInternal == false && schILDDataSource.CanConnect;
         }
 
         private async void ConnectDataSource()
         {
             try
             {
-                IsConnecting = true;
+                IsConnectingInternal = true;
                 await persistentDataSource.ConnectAsync();
 
                 Messenger.Send(new DialogMessage { Title = "Verbindung erfolgreich", Header = "Verbindung erfolgreich", Text = "Es wurde erfolgreich eine Verbindung zur Datenbank aufgebaut" });
@@ -138,13 +141,13 @@ namespace AnonymizationTool.ViewModels
             }
             finally
             {
-                IsConnecting = false;
+                IsConnectingInternal = false;
             }
         }
 
         private bool CanConnectDataSource()
         {
-            return IsConnecting == false && persistentDataSource.CanConnect;
+            return IsConnectingSchILD == false && IsConnectingInternal == false && persistentDataSource.CanConnect;
         }
 
         private void LoadSettings()
@@ -175,26 +178,6 @@ namespace AnonymizationTool.ViewModels
         {
             AnonymizationTypes.Clear();
             AnonymizationTypes.AddRange(Enum.GetValues(typeof(AnonymizationType)).Cast<AnonymizationType>());
-        }
-
-        private async void Save()
-        {
-            try
-            {
-                IsSaving = true;
-                await settingsService.SaveAsync();
-                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
-                ConnectSchILDCommand?.RaiseCanExecuteChanged();
-            }
-            finally
-            {
-                IsSaving = false;
-            }
-        }
-
-        private bool CanSave()
-        {
-            return !IsSaving;
         }
     }
 }

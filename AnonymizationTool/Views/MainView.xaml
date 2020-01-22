@@ -127,7 +127,7 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <fluent:Button Header="Verbindung herstellen"
+                                        <fluent:Button Header="Verbindung herstellen" IsDefinitive="False"
                                                Command="{Binding ConnectSchILDCommand}"
                                                HorizontalAlignment="Left">
                                             <fluent:Button.LargeIcon>
@@ -179,7 +179,7 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         
-                                        <fluent:Button Header="Verbindung herstellen"
+                                        <fluent:Button Header="Verbindung herstellen" IsDefinitive="False"
                                                Command="{Binding ConnectDataSourceCommand}" HorizontalAlignment="Left">
                                             <fluent:Button.LargeIcon>
                                                 <Viewbox Width="32" Height="32" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">

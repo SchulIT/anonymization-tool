@@ -484,7 +484,7 @@
         <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                   VirtualizingPanel.IsVirtualizingWhenGrouping="True">
             <b:Interaction.Behaviors>
-                <behaviors:SelectedItemsBehavior SelectedItems="{Binding SelectedItems}" />
+                <behaviors:SelectedItemsBehavior SelectedItems="{Binding SelectedStudents}" />
             </b:Interaction.Behaviors>
             <ListView.View>
                 <GridView>

@@ -8,6 +8,9 @@ namespace AnonymizationTool.Behaviors
 {
     public class SelectedItemsBehavior : Behavior<ListView>
     {
+
+        private bool suppressBoundCollectionChangedEvent = false;
+
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register("SelectedItems", typeof(IEnumerable), typeof(SelectedItemsBehavior), new PropertyMetadata(OnSelectedItemsChanged));
 
         private static void OnSelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -34,7 +37,7 @@ namespace AnonymizationTool.Behaviors
 
         private void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if(AssociatedObject == null)
+            if(AssociatedObject == null || suppressBoundCollectionChangedEvent)
             {
                 return;
             }
@@ -81,8 +84,10 @@ namespace AnonymizationTool.Behaviors
                 return;
             }
 
+            suppressBoundCollectionChangedEvent = true;
+
             // Mofify the underlying collection
-            foreach(var addedItem in e.AddedItems)
+            foreach (var addedItem in e.AddedItems)
             {
                 boundList.Add(addedItem);
             }
@@ -91,6 +96,8 @@ namespace AnonymizationTool.Behaviors
             {
                 boundList.Remove(removedItem);
             }
+
+            suppressBoundCollectionChangedEvent = false;
         }
     }
 }

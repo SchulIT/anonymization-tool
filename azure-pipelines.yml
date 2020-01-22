@@ -3,6 +3,17 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
+strategy:
+  matrix:
+    x64:
+      buildPlatform: 'x64'
+      dotnetPlatform: 'win-x64'
+    x86:
+      buildPlatform: 'x86'
+      dotnetPlatform: 'win-x86'
+
+
+
 trigger:
 - master
 - refs/tags/*
@@ -15,9 +26,7 @@ pool:
 
 variables:
   solution: 'AnonymizationTool.sln'
-  buildPlatform: 'x64'
   buildConfiguration: 'Release'
-  dotnetPlatform: 'win-x64'
 
 steps:
 - checkout: self
@@ -44,7 +53,7 @@ steps:
 - task: CmdLine@2
   displayName: copy and rename MSI
   inputs:
-    script: copy AnonymizationTool.Installer\bin\x64\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName).msi
+    script: copy AnonymizationTool.Installer\bin\x64\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName)-$(buildPlatform).msi
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
 - task: DotNetCoreCLI@2
@@ -53,6 +62,12 @@ steps:
     arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
     workingDirectory: AnonymizationTool
 
+- task: CmdLine@2
+  displayName: copy and rename self-containing exe
+  inputs:
+    script: copy AnonymizationTool/bin/Release/netcoreapp3.0/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).msi
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) 
+
 - task: GitHubRelease@0
   displayName: Release to GitHub
   inputs:
@@ -60,5 +75,5 @@ steps:
     repositoryName: schulit/anonymization-tool
     assets: |
       'setup-*.msi'
-      'AnonymizationTool/bin/Release/netcoreapp3.0/$(dotnetPlatform)/publish/*.exe'
+      'AnonymizationTool-*.exe'
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))

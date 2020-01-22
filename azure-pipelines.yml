@@ -53,7 +53,7 @@ steps:
 - task: CmdLine@2
   displayName: copy and rename MSI
   inputs:
-    script: copy AnonymizationTool.Installer\bin\x64\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName)-$(buildPlatform).msi
+    script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName)-$(buildPlatform).msi
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
 - task: DotNetCoreCLI@2
@@ -65,7 +65,7 @@ steps:
 - task: CmdLine@2
   displayName: copy and rename self-containing exe
   inputs:
-    script: copy AnonymizationTool/bin/Release/netcoreapp3.0/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).msi
+    script: copy AnonymizationTool/bin/Release/netcoreapp3.1/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).msi
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) 
 
 - task: GitHubRelease@0

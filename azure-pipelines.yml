@@ -59,7 +59,8 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: build self-containing exe
   inputs:
-    arguments: publish -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
+    command: publish
+    arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
     workingDirectory: AnonymizationTool
 
 - task: CmdLine@2

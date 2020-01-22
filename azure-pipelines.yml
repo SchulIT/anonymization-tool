@@ -63,6 +63,7 @@ steps:
     arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
     workingDirectory: AnonymizationTool
     publishWebProjects: false
+    zipAfterPublish: false
 
 - task: CmdLine@2
   displayName: copy and rename self-containing exe

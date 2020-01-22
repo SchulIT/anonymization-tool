@@ -64,5 +64,10 @@ namespace AnonymizationTool.Data.SchILD
                     .GenerateLazy(50);
             });
         }
+
+        public bool IsSupported(DatabaseType type)
+        {
+            return true;
+        }
     }
 }

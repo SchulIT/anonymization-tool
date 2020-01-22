@@ -62,5 +62,10 @@ namespace AnonymizationTool.Data.Persistence
         {
             return Task.CompletedTask;
         }
+
+        public bool IsSupported(DatabaseType type)
+        {
+            return true;
+        }
     }
 }

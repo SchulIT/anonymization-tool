@@ -1,7 +1,7 @@
-﻿using System;
+﻿using AnonymizationTool.Data;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using static AnonymizationTool.Settings.IDataSourceConnectionSettings;
 
 namespace AnonymizationTool.Converters
 {

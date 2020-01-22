@@ -8,7 +8,7 @@ namespace AnonymizationTool.Data.SchILD
 {
     public class OdbcSchILDDataSource : ISchILDDataSource
     {
-        public bool CanConnect { get { return settingsService.Settings.SchILDConnection.Type == IDataSourceConnectionSettings.DatabaseType.Access && !string.IsNullOrEmpty(settingsService.Settings.SchILDConnection.ConnectionString); } }
+        public bool CanConnect { get { return settingsService.Settings.SchILDConnection.Type == DatabaseType.Access && !string.IsNullOrEmpty(settingsService.Settings.SchILDConnection.ConnectionString); } }
 
         public bool IsConnected { get { return connection != null && connection.State == System.Data.ConnectionState.Open; } }
 
@@ -100,6 +100,11 @@ namespace AnonymizationTool.Data.SchILD
                     return Gender.Other;
 
             }
+        }
+
+        public bool IsSupported(DatabaseType type)
+        {
+            return type == DatabaseType.Access;
         }
     }
 }

@@ -11,5 +11,7 @@ namespace AnonymizationTool.Data
         Task ConnectAsync();
 
         Task DisconnectAsync();
+
+        bool IsSupported(DatabaseType type);
     }
 }

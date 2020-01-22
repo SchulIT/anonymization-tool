@@ -1,4 +1,5 @@
-﻿using AnonymizationTool.Data.Persistence;
+﻿using AnonymizationTool.Data;
+using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Messages;
 using AnonymizationTool.Settings;
@@ -8,7 +9,6 @@ using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static AnonymizationTool.Settings.IDataSourceConnectionSettings;
 using static AnonymizationTool.Settings.IEmailSettings;
 
 namespace AnonymizationTool.ViewModels
@@ -53,7 +53,9 @@ namespace AnonymizationTool.ViewModels
             }
         }
 
-        public List<DatabaseType> DatabaseTypes { get; } = new List<DatabaseType>();
+        public List<DatabaseType> SchILDDatabaseTypes { get; } = new List<DatabaseType>();
+
+        public List<DatabaseType> InternalDatabaseTypes { get; } = new List<DatabaseType>();
 
         public List<AnonymizationType> AnonymizationTypes { get; } = new List<AnonymizationType>();
 
@@ -153,8 +155,21 @@ namespace AnonymizationTool.ViewModels
 
         private void AddDatabaseTypes()
         {
-            DatabaseTypes.Clear();
-            DatabaseTypes.AddRange(Enum.GetValues(typeof(DatabaseType)).Cast<DatabaseType>());
+            SchILDDatabaseTypes.Clear();
+            InternalDatabaseTypes.Clear();
+
+            foreach(var type in Enum.GetValues(typeof(DatabaseType)).Cast<DatabaseType>())
+            {
+                if(persistentDataSource.IsSupported(type))
+                {
+                    InternalDatabaseTypes.Add(type);
+                }
+
+                if(schILDDataSource.IsSupported(type))
+                {
+                    SchILDDatabaseTypes.Add(type);
+                }
+            }
         }
 
         private void AddAnonymizationTypes()

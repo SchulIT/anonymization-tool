@@ -109,7 +109,7 @@
 
                                 <TextBlock Grid.Row="8">Art der Datenbank</TextBlock>
                                 <ComboBox Grid.Row="8" Grid.Column="2" 
-                                          ItemsSource="{Binding DatabaseTypes}" SelectedItem="{Binding Settings.SchILDConnection.Type}">
+                                          ItemsSource="{Binding SchILDDatabaseTypes}" SelectedItem="{Binding Settings.SchILDConnection.Type}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Converter={StaticResource DatabaseTypeStringConverter}}"></TextBlock>
@@ -151,7 +151,7 @@
 
                                 <TextBlock Grid.Row="12">Art der Datenbank</TextBlock>
                                 <ComboBox Grid.Row="12" Grid.Column="2" 
-                                          ItemsSource="{Binding DatabaseTypes}" SelectedItem="{Binding Settings.DatabaseConnection.Type}">
+                                          ItemsSource="{Binding InternalDatabaseTypes}" SelectedItem="{Binding Settings.DatabaseConnection.Type}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding Converter={StaticResource DatabaseTypeStringConverter}}"></TextBlock>

@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using static AnonymizationTool.Settings.IDataSourceConnectionSettings;
+﻿using AnonymizationTool.Data;
+using Newtonsoft.Json;
 
 namespace AnonymizationTool.Settings
 {

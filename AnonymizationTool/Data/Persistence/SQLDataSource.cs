@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static AnonymizationTool.Settings.IDataSourceConnectionSettings;
 
 namespace AnonymizationTool.Data.Persistence
 {
@@ -73,6 +72,11 @@ namespace AnonymizationTool.Data.Persistence
         public Task SaveChangesAsync()
         {
             return context.SaveChangesAsync();
+        }
+
+        public bool IsSupported(DatabaseType type)
+        {
+            return type == DatabaseType.MSSQL || type == DatabaseType.MySQL || type == DatabaseType.SQLite;
         }
 
         internal class SqlContext : DbContext

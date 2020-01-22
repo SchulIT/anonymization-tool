@@ -54,19 +54,19 @@ steps:
   displayName: copy and rename MSI
   inputs:
     script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName)-$(buildPlatform).msi
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  condition: succeeded()
 
 - task: DotNetCoreCLI@2
   displayName: build self-containing exe
   inputs:
-    arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
+    arguments: publish -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
     workingDirectory: AnonymizationTool
 
 - task: CmdLine@2
   displayName: copy and rename self-containing exe
   inputs:
-    script: copy AnonymizationTool/bin/Release/netcoreapp3.1/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).msi
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) 
+    script: copy AnonymizationTool/bin/Release/netcoreapp3.1/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).exe
+  condition: succeeded()
 
 - task: GitHubRelease@0
   displayName: Release to GitHub

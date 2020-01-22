@@ -222,6 +222,7 @@ namespace AnonymizationTool.ViewModels
                 await dataSource.SaveChangesAsync();
 
                 SelectedStudents.Clear();
+                LoadStudents();
             }
             catch (Exception e)
             {

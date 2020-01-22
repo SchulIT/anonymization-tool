@@ -68,7 +68,7 @@ steps:
 - task: CmdLine@2
   displayName: copy and rename self-containing exe
   inputs:
-    script: copy AnonymizationTool/bin/Release/netcoreapp3.1/$(dotnetPlatform)/publish/AnonymizationTool.exe AnonymizationTool-$(buildPlatform).exe
+    script: copy AnonymizationTool\bin\Release\netcoreapp3.1\$(dotnetPlatform)\publish\AnonymizationTool.exe AnonymizationTool-$(buildPlatform).exe
   condition: succeeded()
 
 - task: GitHubRelease@0

@@ -45,8 +45,8 @@
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLLOCATION</RefTargetDir>
-      <TargetFrameworkIdentifier>netcoreapp3.0</TargetFrameworkIdentifier>
-      <Runtime>win-x64</Runtime>
+      <TargetFrameworkIdentifier>netcoreapp3.1</TargetFrameworkIdentifier>
+      <Runtime>win-$(Platform)</Runtime>
       <IsDotnetSDKProject>True</IsDotnetSDKProject>
     </ProjectReference>
   </ItemGroup>

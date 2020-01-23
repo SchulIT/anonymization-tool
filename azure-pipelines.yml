@@ -21,7 +21,7 @@ stages:
 - stage: build
   displayName: Build
   jobs:
-  - job: run_build
+  - job: Build
     strategy:
       matrix:
         x64:
@@ -94,7 +94,7 @@ stages:
   - build
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   jobs:
-  - job: publish_github
+  - job: GitHub
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: Download exe and MSI artifacts

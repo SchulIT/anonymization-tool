@@ -35,19 +35,26 @@ stages:
     - checkout: self
       submodules: true
 
-    - script: |
-        dotnet tool install --global dotnet-project-licenses --version 1.1.1
-        mkdir output
+    - task: CmdLine@2
+      displayName: Install gotnet-project-licenses
+      inputs:
+        script: dotnet tool install --global dotnet-project-licenses --version 1.1.1
+
+    - task: CmdLine@2
+      displayName: Create output directory
+      inputs:
+        script: mkdir output
 
     - task: NuGetToolInstaller@1
+      displayName: Install nuget.exe
 
     - task: NuGetCommand@2
-      displayName: 'nuget restore'
+      displayName: Restore NuGet packages
       inputs:
         restoreSolution: '$(solution)'
 
     - task: VSBuild@1
-      displayName: 'Build Solution'
+      displayName: Build Solution
       inputs:
         solution: '$(solution)'
         platform: '$(buildPlatform)'
@@ -55,13 +62,13 @@ stages:
         msbuildArgs: '/p:RunWixToolsOutOfProc=true'
 
     - task: CmdLine@2
-      displayName: copy and rename MSI
+      displayName: Copy and rename MSI
       inputs:
-        script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi output/setup-$(Build.SourceBranchName)-$(buildPlatform).msi
+        script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi output\setup-$(Build.SourceBranchName)-$(buildPlatform).msi
       condition: succeeded()
 
     - task: DotNetCoreCLI@2
-      displayName: build self-containing exe
+      displayName: Build self-containing exe
       inputs:
         command: publish
         arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
@@ -70,9 +77,9 @@ stages:
         zipAfterPublish: false
 
     - task: CmdLine@2
-      displayName: copy and rename self-containing exe
+      displayName: Copy and rename self-containing exe
       inputs:
-        script: copy AnonymizationTool\bin\Release\netcoreapp3.1\$(dotnetPlatform)\publish\AnonymizationTool.exe output/AnonymizationTool-$(buildPlatform).exe
+        script: copy AnonymizationTool\bin\Release\netcoreapp3.1\$(dotnetPlatform)\publish\AnonymizationTool.exe output\AnonymizationTool-$(buildPlatform).exe
       condition: succeeded()
 
     - task: PublishPipelineArtifact@1
@@ -90,6 +97,7 @@ stages:
   - job: publish_github
     steps:
     - task: DownloadPipelineArtifact@2
+      displayName: Download exe and MSI artifacts
       inputs:
         artifact: output
 
@@ -99,6 +107,6 @@ stages:
         gitHubConnection: 'GitHub.com'
         repositoryName: schulit/anonymization-tool
         assets: |
-          artifacts/setup-*.msi
-          artifacts/AnonymizationTool-*.exe
+          output/setup-*.msi
+          output/AnonymizationTool-*.exe
       

@@ -86,7 +86,7 @@ stages:
       displayName: Publish exe and MSI to artifacts
       inputs:
         targetPath: output
-        artifactName: output
+        artifactName: output-$(buildPlatform)
 
 - stage: publish
   displayName: Publish
@@ -98,8 +98,6 @@ stages:
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: Download exe and MSI artifacts
-      inputs:
-        artifact: output
 
     - task: GitHubRelease@0
       displayName: Release to GitHub
@@ -107,6 +105,8 @@ stages:
         gitHubConnection: 'GitHub.com'
         repositoryName: schulit/anonymization-tool
         assets: |
-          output/setup-*.msi
-          output/AnonymizationTool-*.exe
+          output-x86/setup-*.msi
+          output-x86/AnonymizationTool-*.exe
+          output-x64/setup-*.msi
+          output-x64/AnonymizationTool-*.exe
       

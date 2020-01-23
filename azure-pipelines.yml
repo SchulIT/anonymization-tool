@@ -3,15 +3,6 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
-strategy:
-  matrix:
-    x64:
-      buildPlatform: 'x64'
-      dotnetPlatform: 'win-x64'
-    x86:
-      buildPlatform: 'x86'
-      dotnetPlatform: 'win-x86'
-
 trigger:
 - master
 - refs/tags/*
@@ -31,6 +22,15 @@ stages:
   displayName: Build
   jobs:
   - job: run_build
+    strategy:
+      matrix:
+        x64:
+          buildPlatform: 'x64'
+          dotnetPlatform: 'win-x64'
+        x86:
+          buildPlatform: 'x86'
+          dotnetPlatform: 'win-x86'
+
     steps:
     - checkout: self
       submodules: true

@@ -87,15 +87,11 @@ stages:
   - build
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   jobs:
-  - job: Publish to GitHub
+  - job: publish_github
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: output
-
-
-    - download: current
-      artifact: artifacts
 
     - task: GitHubRelease@0
       displayName: Release to GitHub

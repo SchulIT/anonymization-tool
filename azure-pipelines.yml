@@ -90,7 +90,7 @@ stages:
   - job: Publish to GitHub
     steps:
     - task: DownloadPipelineArtifact@2
-      input:
+      inputs:
         artifact: output
 
 

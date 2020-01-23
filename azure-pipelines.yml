@@ -12,8 +12,6 @@ strategy:
       buildPlatform: 'x86'
       dotnetPlatform: 'win-x86'
 
-
-
 trigger:
 - master
 - refs/tags/*
@@ -28,55 +26,83 @@ variables:
   solution: 'AnonymizationTool.sln'
   buildConfiguration: 'Release'
 
-steps:
-- checkout: self
-  submodules: true
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+  - job: run_build
+    steps:
+    - checkout: self
+      submodules: true
 
-- script: |
-    dotnet tool install --global dotnet-project-licenses --version 1.1.1
+    - script: |
+        dotnet tool install --global dotnet-project-licenses --version 1.1.1
+        mkdir output
 
-- task: NuGetToolInstaller@1
+    - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  displayName: 'nuget restore'
-  inputs:
-    restoreSolution: '$(solution)'
+    - task: NuGetCommand@2
+      displayName: 'nuget restore'
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  displayName: 'Build Solution'
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:RunWixToolsOutOfProc=true'
+    - task: VSBuild@1
+      displayName: 'Build Solution'
+      inputs:
+        solution: '$(solution)'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        msbuildArgs: '/p:RunWixToolsOutOfProc=true'
 
-- task: CmdLine@2
-  displayName: copy and rename MSI
-  inputs:
-    script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi setup-$(Build.SourceBranchName)-$(buildPlatform).msi
-  condition: succeeded()
+    - task: CmdLine@2
+      displayName: copy and rename MSI
+      inputs:
+        script: copy AnonymizationTool.Installer\bin\$(buildPlatform)\Release\AnonymizationTool.Installer.msi output/setup-$(Build.SourceBranchName)-$(buildPlatform).msi
+      condition: succeeded()
 
-- task: DotNetCoreCLI@2
-  displayName: build self-containing exe
-  inputs:
-    command: publish
-    arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
-    workingDirectory: AnonymizationTool
-    publishWebProjects: false
-    zipAfterPublish: false
+    - task: DotNetCoreCLI@2
+      displayName: build self-containing exe
+      inputs:
+        command: publish
+        arguments: -c $(buildConfiguration) -r $(dotnetPlatform) /p:PublishTrimmed=true /p:PublishSingleFile=true
+        workingDirectory: AnonymizationTool
+        publishWebProjects: false
+        zipAfterPublish: false
 
-- task: CmdLine@2
-  displayName: copy and rename self-containing exe
-  inputs:
-    script: copy AnonymizationTool\bin\Release\netcoreapp3.1\$(dotnetPlatform)\publish\AnonymizationTool.exe AnonymizationTool-$(buildPlatform).exe
-  condition: succeeded()
+    - task: CmdLine@2
+      displayName: copy and rename self-containing exe
+      inputs:
+        script: copy AnonymizationTool\bin\Release\netcoreapp3.1\$(dotnetPlatform)\publish\AnonymizationTool.exe output/AnonymizationTool-$(buildPlatform).exe
+      condition: succeeded()
 
-- task: GitHubRelease@0
-  displayName: Release to GitHub
-  inputs:
-    gitHubConnection: 'GitHub.com'
-    repositoryName: schulit/anonymization-tool
-    assets: |
-      'setup-*.msi'
-      'AnonymizationTool-*.exe'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish exe and MSI to artifacts
+      inputs:
+        targetPath: output
+        artifactName: output
+
+- stage: publish
+  displayName: Publish
+  dependsOn:
+  - build
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  jobs:
+  - job: Publish to GitHub
+    steps:
+    - task: DownloadPipelineArtifact@2
+      input:
+        artifact: output
+
+
+    - download: current
+      artifact: artifacts
+
+    - task: GitHubRelease@0
+      displayName: Release to GitHub
+      inputs:
+        gitHubConnection: 'GitHub.com'
+        repositoryName: schulit/anonymization-tool
+        assets: |
+          artifacts/setup-*.msi
+          artifacts/AnonymizationTool-*.exe
+      

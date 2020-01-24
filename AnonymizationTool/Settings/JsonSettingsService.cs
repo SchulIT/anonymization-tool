@@ -68,6 +68,7 @@ namespace AnonymizationTool.Settings
         private async void OnJsonSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             await SaveAsync();
+            OnChanged(new SettingsChangedEventArgs());
         }
 
         private string GetPath()

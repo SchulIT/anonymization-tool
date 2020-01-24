@@ -99,6 +99,12 @@ namespace AnonymizationTool.ViewModels
             AddAnonymizationTypes();
 
             LoadSettings();
+
+            settingsService.Changed += delegate
+            {
+                TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
+                TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
+            };
         }
 
         private async void ConnectSchILD()

@@ -261,7 +261,7 @@ namespace AnonymizationTool.ViewModels
 
         private void Anonymize()
         {
-            InternalAnonymize(Students);
+            InternalAnonymize(Students.ToList());
         }
 
         private bool CanAnonymize()

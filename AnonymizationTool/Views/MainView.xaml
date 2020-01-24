@@ -27,7 +27,7 @@
                 <fluent:Backstage>
                     <fluent:BackstageTabControl>
                         <fluent:BackstageTabItem Header="Einstellungen" DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Settings}">
-                            <ScrollViewer>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <Grid Margin="10" HorizontalAlignment="Stretch">
                                     <Grid.Resources>
                                         <converters:DatabaseTypeStringConverter x:Key="DatabaseTypeStringConverter" />

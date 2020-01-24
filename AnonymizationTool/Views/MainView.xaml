@@ -506,8 +506,12 @@
             </fluent:StatusBarItem>
         </fluent:StatusBar>
 
+        <Border DockPanel.Dock="Top" Background="DarkRed" Padding="5" Visibility="{Binding IsNotPersistentDatabase, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Foreground="White" TextWrapping="Wrap">Die aktuellen Änderungen werden nicht gespeichert. Zum persistieren der anonymen Identitäten muss eine Verbindung zu einer persistenten Datenbank erstellt werden.</TextBlock>
+        </Border>
 
-
+        
+        
         <ListView ItemsSource="{Binding Source={StaticResource GroupedStudents}}" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                   VirtualizingPanel.IsVirtualizingWhenGrouping="True">
             <b:Interaction.Behaviors>

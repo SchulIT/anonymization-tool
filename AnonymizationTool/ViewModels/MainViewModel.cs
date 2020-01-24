@@ -53,6 +53,17 @@ namespace AnonymizationTool.ViewModels
             set { Set(() => BusyProgress, ref busyProgress, value); }
         }
 
+        private bool isNotPersistentDatabase = false;
+
+        /// <summary>
+        /// Flag whether the user is using a SQLite in-memory database
+        /// </summary>
+        public bool IsNotPersistentDatabase
+        {
+            get { return isNotPersistentDatabase; }
+            set { Set(() => IsNotPersistentDatabase, ref isNotPersistentDatabase, value); }
+        }
+
         public IMessenger Messenger { get { return base.MessengerInstance; } }
 
         #endregion
@@ -113,6 +124,7 @@ namespace AnonymizationTool.ViewModels
             {
                 dispatcher.RunOnUI(() =>
                 {
+                    IsNotPersistentDatabase = sender.IsInMemory;
                     LoadStudentsCommand?.RaiseCanExecuteChanged();
                     SyncCommand?.RaiseCanExecuteChanged();
                     AnonymizeCommand?.RaiseCanExecuteChanged();

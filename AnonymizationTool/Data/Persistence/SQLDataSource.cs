@@ -9,6 +9,10 @@ namespace AnonymizationTool.Data.Persistence
 {
     public class SqlDataSource : IPersistentDataSource
     {
+        private static string InMemoryConnectionString = "datasource=:memory:";
+
+        public bool IsInMemory { get; private set; }
+
         public bool IsConnected { get { return context != null && context.Database != null; } }
 
         public bool CanConnect { get { return settingsService.Settings.DatabaseConnection.Type != DatabaseType.Access && !string.IsNullOrEmpty(settingsService.Settings.DatabaseConnection.ConnectionString); } }
@@ -36,7 +40,17 @@ namespace AnonymizationTool.Data.Persistence
                 await DisconnectAsync();
             }
 
+            IsInMemory = false;
             context = new SqlContext(settingsService.Settings.DatabaseConnection.Type, settingsService.Settings.DatabaseConnection.ConnectionString);
+
+            if(settingsService.Settings.DatabaseConnection.Type == DatabaseType.SQLite)
+            {
+                IsInMemory = !string.IsNullOrEmpty(settingsService.Settings.DatabaseConnection.ConnectionString) &&
+                    settingsService.Settings.DatabaseConnection.ConnectionString.ToLower().Trim() == InMemoryConnectionString;
+
+                await context.Database.OpenConnectionAsync().ConfigureAwait(false);
+            }
+
             await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
 
             RaiseConnectionStateChanged();

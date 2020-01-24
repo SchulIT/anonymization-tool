@@ -7,6 +7,8 @@ namespace AnonymizationTool.Data.Persistence
     public class MemoryDataSource : IPersistentDataSource
     {
 
+        public bool IsInMemory { get { return true; } }
+
         public bool CanConnect { get { return true; } }
 
         private readonly List<AnonymousStudent> students = new List<AnonymousStudent>();

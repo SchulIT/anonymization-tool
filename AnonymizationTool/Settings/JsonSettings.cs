@@ -23,7 +23,11 @@ namespace AnonymizationTool.Settings
         public IDataSourceConnectionSettings SchILDConnection { get; } = new JsonDataSourceConnectionSettings();
 
         [JsonProperty("database")]
-        public IDataSourceConnectionSettings DatabaseConnection { get; } = new JsonDataSourceConnectionSettings();
+        public IDataSourceConnectionSettings DatabaseConnection { get; } = new JsonDataSourceConnectionSettings
+        {
+            ConnectionString = "datasource=:memory:",
+            Type = DatabaseType.SQLite
+        };
 
         public JsonSettings()
         {

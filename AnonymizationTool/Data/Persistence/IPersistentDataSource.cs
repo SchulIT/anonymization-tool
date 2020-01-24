@@ -5,6 +5,9 @@ namespace AnonymizationTool.Data.Persistence
 {
     public interface IPersistentDataSource : IDataSource
     {
+
+        bool IsInMemory { get; }
+
         bool IsConnected { get; }
 
         event ConnectionStateChangedEventHandler<IPersistentDataSource> ConnectionStateChanged;

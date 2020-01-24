@@ -105,8 +105,8 @@ stages:
         gitHubConnection: 'GitHub.com'
         repositoryName: schulit/anonymization-tool
         assets: |
-          output-x86/setup-*.msi
-          output-x86/AnonymizationTool-*.exe
-          output-x64/setup-*.msi
-          output-x64/AnonymizationTool-*.exe
+          $(Agent.BuildDirectory)/output-x86/setup-*.msi
+          $(Agent.BuildDirectory)/output-x86/AnonymizationTool-*.exe
+          $(Agent.BuildDirectory)/output-x64/setup-*.msi
+          $(Agent.BuildDirectory)/output-x64/AnonymizationTool-*.exe
       

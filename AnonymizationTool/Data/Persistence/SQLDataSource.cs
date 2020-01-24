@@ -45,6 +45,8 @@ namespace AnonymizationTool.Data.Persistence
         public async Task DisconnectAsync()
         {
             await context.DisposeAsync().ConfigureAwait(false);
+            context = null;
+
             RaiseConnectionStateChanged();
         }
 

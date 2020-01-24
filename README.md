@@ -89,10 +89,20 @@ Um die anonymen Identitäten abzuspeichern, wird eine interne Datenbank verwende
 
 Grundsätzlich wird das [Entity Framework Core](https://docs.microsoft.com/de-de/ef/core/) für die interne Datenbank verwendet. 
 
+#### Ohne Datenbank arbeiten
+
+Das Tool kann auch ohne persistente Datenbank arbeiten. Dazu wählt man als Art der Datenbank "SQLite" aus und nutzt folgende Verbindungszeichenfolge:
+
+```
+Datasource=:memory:
+```
+
+**Wichtig:** Anonyme Identitäten werden nicht dauerhaft gespeichert, können jedoch unmittelbar als CSV-Datei exportiert werden.
+
 #### SQLite
 
 ```
-Filename=$path$
+Datasource=$path$
 ```
 
 Bei $path$ den Dateinamen der SQLite-Datenbank angeben. Die Datei wird automatisch beim ersten Verbinden erstellt.

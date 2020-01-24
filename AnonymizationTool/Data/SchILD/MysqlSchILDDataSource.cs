@@ -51,11 +51,11 @@ namespace AnonymizationTool.Data.SchILD
             }
         }
 
-        public override async Task TestConnectionAsync()
+        public override async Task TestConnectionAsync(DatabaseType type, string connectionString)
         {
-            using (var connection = new MySqlConnection(GetConnectionString()))
+            using (var connection = new MySqlConnection(connectionString))
             {
-                await connection.OpenAsync();
+                await connection.OpenAsync().ConfigureAwait(false);
             }
         }
     }

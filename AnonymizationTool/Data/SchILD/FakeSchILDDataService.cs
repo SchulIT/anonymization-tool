@@ -45,7 +45,7 @@ namespace AnonymizationTool.Data.SchILD
             return true;
         }
 
-        public Task TestConnectionAsync()
+        public Task TestConnectionAsync(DatabaseType type, string connectionString)
         {
             return Task.CompletedTask;
         }

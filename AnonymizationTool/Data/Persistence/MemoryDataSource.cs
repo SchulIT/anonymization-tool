@@ -67,5 +67,10 @@ namespace AnonymizationTool.Data.Persistence
         {
             return true;
         }
+
+        public Task TestConnectionAsync(DatabaseType type, string connectionString)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

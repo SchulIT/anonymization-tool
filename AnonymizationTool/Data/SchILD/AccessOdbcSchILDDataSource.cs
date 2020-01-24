@@ -50,11 +50,11 @@ namespace AnonymizationTool.Data.SchILD
             }
         }
 
-        public override async Task TestConnectionAsync()
+        public override async Task TestConnectionAsync(DatabaseType type, string connectionString)
         {
             using (var connection = new OdbcConnection(GetConnectionString()))
             {
-                await connection.OpenAsync();
+                await connection.OpenAsync().ConfigureAwait(false);
             }
         }
     }

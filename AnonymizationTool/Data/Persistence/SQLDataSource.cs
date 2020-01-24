@@ -81,6 +81,14 @@ namespace AnonymizationTool.Data.Persistence
             return type == DatabaseType.MSSQL || type == DatabaseType.MySQL || type == DatabaseType.SQLite;
         }
 
+        public async Task TestConnectionAsync(DatabaseType type, string connectionString)
+        {
+            using (var context = new SqlContext(type, connectionString))
+            {
+                await context.Database.OpenConnectionAsync().ConfigureAwait(false);
+            }
+        }
+
         internal class SqlContext : DbContext
         {
             internal DbSet<AnonymousStudent> Students { get; set; }

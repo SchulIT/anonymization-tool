@@ -7,5 +7,7 @@ namespace AnonymizationTool.Data
         bool CanConnect { get; }
 
         bool IsSupported(DatabaseType type);
+
+        Task TestConnectionAsync(DatabaseType type, string connectionString);
     }
 }

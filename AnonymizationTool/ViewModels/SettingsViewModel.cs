@@ -107,7 +107,7 @@ namespace AnonymizationTool.ViewModels
             {
                 IsConnectingSchILD = true;
 
-                await schILDDataSource.TestConnectionAsync();
+                await schILDDataSource.TestConnectionAsync(settingsService.Settings.SchILDConnection.Type, settingsService.Settings.SchILDConnection.ConnectionString);
 
                 Messenger.Send(new DialogMessage { Title = "Verbindung erfolgreich", Header = "Verbindung erfolgreich", Text = "Es wurde erfolgreich eine Verbindung zur SchILD-Datenbank aufgebaut" });
             }
@@ -131,7 +131,8 @@ namespace AnonymizationTool.ViewModels
             try
             {
                 IsConnectingInternal = true;
-                await persistentDataSource.ConnectAsync();
+
+                await persistentDataSource.TestConnectionAsync(settingsService.Settings.DatabaseConnection.Type, settingsService.Settings.DatabaseConnection.ConnectionString);
 
                 Messenger.Send(new DialogMessage { Title = "Verbindung erfolgreich", Header = "Verbindung erfolgreich", Text = "Es wurde erfolgreich eine Verbindung zur Datenbank aufgebaut" });
             }

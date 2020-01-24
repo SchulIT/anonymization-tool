@@ -25,8 +25,6 @@ namespace AnonymizationTool.Data.SchILD
 
         public abstract Task<IEnumerable<Student>> LoadStudentsAsync();
 
-        public abstract Task TestConnectionAsync();
-
         protected string GetConnectionString()
         {
             return settingsService.Settings.SchILDConnection.ConnectionString;
@@ -47,5 +45,7 @@ namespace AnonymizationTool.Data.SchILD
 
             }
         }
+
+        public abstract Task TestConnectionAsync(DatabaseType type, string connectionString);
     }
 }

@@ -41,11 +41,6 @@ namespace AnonymizationTool.Data.SchILD
             return GetDataSource(settingsService.Settings.SchILDConnection.Type).LoadStudentsAsync();
         }
 
-        public Task TestConnectionAsync()
-        {
-            return GetDataSource(settingsService.Settings.SchILDConnection.Type).TestConnectionAsync();
-        }
-
         private ISchILDDataSource GetDataSource(DatabaseType type)
         {
             ISchILDDataSource dataSource;
@@ -56,6 +51,12 @@ namespace AnonymizationTool.Data.SchILD
             }
 
             return null;
+        }
+
+        public Task TestConnectionAsync(DatabaseType type, string connectionString)
+        {
+            return GetDataSource(type)
+                .TestConnectionAsync(type, connectionString);
         }
     }
 }

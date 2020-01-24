@@ -124,8 +124,12 @@ namespace AnonymizationTool.ViewModels
             {
                 dispatcher.RunOnUI(() =>
                 {
-                    Students.Clear();
-                    SelectedStudents.Clear();
+                    if (args.IsConnected == false)
+                    {
+                        // Clear all students in case we get disconnected
+                        Students.Clear();
+                        SelectedStudents.Clear();
+                    }
 
                     IsNotPersistentDatabase = sender.IsInMemory;
                     LoadStudentsCommand?.RaiseCanExecuteChanged();

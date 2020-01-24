@@ -39,6 +39,7 @@ namespace AnonymizationTool.ViewModels
 
                 TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
                 TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
+                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -56,6 +57,7 @@ namespace AnonymizationTool.ViewModels
 
                 TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
                 TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
+                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -75,6 +77,8 @@ namespace AnonymizationTool.ViewModels
 
         public RelayCommand TestDataSourceConnectionCommand { get; private set; }
 
+        public RelayCommand ConnectDataSourceCommand { get; private set; }
+
         #endregion
 
         #region Services
@@ -92,8 +96,9 @@ namespace AnonymizationTool.ViewModels
             this.schILDDataSource = schILDDataSource;
             this.settingsService = settingsService;
 
-            TestSchILDConnectionCommand = new RelayCommand(ConnectSchILD, CanConnectSchILD);
-            TestDataSourceConnectionCommand = new RelayCommand(ConnectDataSource, CanConnectDataSource);
+            TestSchILDConnectionCommand = new RelayCommand(TestConnectSchILD, CanTestConnectSchILD);
+            TestDataSourceConnectionCommand = new RelayCommand(TestConnectDataSource, TestCanConnectDataSource);
+            ConnectDataSourceCommand = new RelayCommand(ConnectDataSource, CanConnectDataSource);
 
             AddDatabaseTypes();
             AddAnonymizationTypes();
@@ -104,10 +109,11 @@ namespace AnonymizationTool.ViewModels
             {
                 TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
                 TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
+                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
             };
         }
 
-        private async void ConnectSchILD()
+        private async void TestConnectSchILD()
         {
             try
             {
@@ -127,12 +133,12 @@ namespace AnonymizationTool.ViewModels
             }
         }
 
-        private bool CanConnectSchILD()
+        private bool CanTestConnectSchILD()
         {
             return IsConnectingSchILD == false && IsConnectingInternal == false && schILDDataSource.CanConnect;
         }
 
-        private async void ConnectDataSource()
+        private async void TestConnectDataSource()
         {
             try
             {
@@ -152,9 +158,34 @@ namespace AnonymizationTool.ViewModels
             }
         }
 
-        private bool CanConnectDataSource()
+        private bool TestCanConnectDataSource()
         {
             return IsConnectingSchILD == false && IsConnectingInternal == false && persistentDataSource.CanConnect;
+        }
+
+        private async void ConnectDataSource()
+        {
+            try
+            {
+                IsConnectingInternal = true;
+
+                await persistentDataSource.ConnectAsync();
+
+                Messenger.Send(new DialogMessage { Title = "Verbindung erfolgreich", Header = "Verbindung erfolgreich", Text = "Es wurde erfolgreich eine Verbindung zur Datenbank aufgebaut" });
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorDialogMessage { Exception = e, Title = "Verbindung nicht erfolgreich", Header = "Fehler beim Verbinden", Text = "Es konnte keine Verbindung zur Datenbank aufgebaut werden. Bitte die Verbindungszeichenfolge überprüfen." });
+            }
+            finally
+            {
+                IsConnectingInternal = false;
+            }
+        }
+
+        private bool CanConnectDataSource()
+        {
+            return persistentDataSource.CanConnect;
         }
 
         private void LoadSettings()

@@ -124,6 +124,9 @@ namespace AnonymizationTool.ViewModels
             {
                 dispatcher.RunOnUI(() =>
                 {
+                    Students.Clear();
+                    SelectedStudents.Clear();
+
                     IsNotPersistentDatabase = sender.IsInMemory;
                     LoadStudentsCommand?.RaiseCanExecuteChanged();
                     SyncCommand?.RaiseCanExecuteChanged();

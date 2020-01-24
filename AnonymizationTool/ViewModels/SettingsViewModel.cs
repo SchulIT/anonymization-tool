@@ -37,8 +37,8 @@ namespace AnonymizationTool.ViewModels
             {
                 Set(() => IsConnectingSchILD, ref isConnectionSchILD, value);
 
-                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
-                ConnectSchILDCommand?.RaiseCanExecuteChanged();
+                TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
+                TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -54,8 +54,8 @@ namespace AnonymizationTool.ViewModels
             {
                 Set(() => IsConnectingInternal, ref isConnectionInternal, value);
 
-                ConnectDataSourceCommand?.RaiseCanExecuteChanged();
-                ConnectSchILDCommand?.RaiseCanExecuteChanged();
+                TestDataSourceConnectionCommand?.RaiseCanExecuteChanged();
+                TestSchILDConnectionCommand?.RaiseCanExecuteChanged();
             }
         }
 
@@ -71,9 +71,9 @@ namespace AnonymizationTool.ViewModels
 
         #region Commands
 
-        public RelayCommand ConnectSchILDCommand { get; private set; }
+        public RelayCommand TestSchILDConnectionCommand { get; private set; }
 
-        public RelayCommand ConnectDataSourceCommand { get; private set; }
+        public RelayCommand TestDataSourceConnectionCommand { get; private set; }
 
         #endregion
 
@@ -92,8 +92,8 @@ namespace AnonymizationTool.ViewModels
             this.schILDDataSource = schILDDataSource;
             this.settingsService = settingsService;
 
-            ConnectSchILDCommand = new RelayCommand(ConnectSchILD, CanConnectSchILD);
-            ConnectDataSourceCommand = new RelayCommand(ConnectDataSource, CanConnectDataSource);
+            TestSchILDConnectionCommand = new RelayCommand(ConnectSchILD, CanConnectSchILD);
+            TestDataSourceConnectionCommand = new RelayCommand(ConnectDataSource, CanConnectDataSource);
 
             AddDatabaseTypes();
             AddAnonymizationTypes();

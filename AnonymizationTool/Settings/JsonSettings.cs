@@ -8,7 +8,7 @@ namespace AnonymizationTool.Settings
 {
     public class JsonSettings : ObservableObject, ISettings
     {
-        private bool keepGender;
+        private bool keepGender = true;
 
         [JsonProperty("keep_gender")]
         public bool KeepGender
@@ -79,7 +79,7 @@ namespace AnonymizationTool.Settings
 
     public class JsonEmailSettings : ObservableObject, IEmailSettings
     {
-        private AnonymizationType type;
+        private AnonymizationType type = AnonymizationType.FirstnameLastname;
 
         [JsonProperty("type")]
         public IEmailSettings.AnonymizationType Type
@@ -88,7 +88,7 @@ namespace AnonymizationTool.Settings
             set => Set(ref type, value);
         }
 
-        private string domain;
+        private string domain = "example.org";
 
         [JsonProperty("domain")]
         public string Domain
@@ -97,7 +97,7 @@ namespace AnonymizationTool.Settings
             set => Set(ref domain, value);
         }
 
-        private int randomLength;
+        private int randomLength = 10;
 
         [JsonProperty("random_length")]
         public int RandomLength

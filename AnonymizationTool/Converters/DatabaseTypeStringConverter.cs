@@ -20,7 +20,7 @@ namespace AnonymizationTool.Converters
                     return "Access";
 
                 case DatabaseType.MSSQL:
-                    return "MSSQL Server";
+                    return "Microsoft SQL Server";
 
                 case DatabaseType.MySQL:
                     return "MySQL/MariaDB";

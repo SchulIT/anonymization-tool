@@ -92,15 +92,19 @@ stages:
   displayName: Publish
   dependsOn:
   - build
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  #condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   jobs:
   - job: GitHub
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: Download exe and MSI artifacts
 
+    - task: print-env-task@1
+    - task: print-fs-structure-task@1
+
     - task: GitHubRelease@0
       displayName: Release to GitHub
+      condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
       inputs:
         gitHubConnection: 'GitHub.com'
         repositoryName: schulit/anonymization-tool

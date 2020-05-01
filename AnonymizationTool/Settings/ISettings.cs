@@ -1,4 +1,6 @@
-﻿namespace AnonymizationTool.Settings
+﻿using AnonymizationTool.Settings.Export;
+
+namespace AnonymizationTool.Settings
 {
     public interface ISettings
     {
@@ -9,5 +11,7 @@
         IDataSourceConnectionSettings SchILDConnection { get; }
 
         IDataSourceConnectionSettings DatabaseConnection { get; }
+
+        IExportSettings Export { get; }
     }
 }

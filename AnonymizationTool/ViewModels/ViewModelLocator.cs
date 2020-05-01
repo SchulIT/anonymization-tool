@@ -3,6 +3,8 @@ using AnonymizationTool.Data;
 using AnonymizationTool.Data.Persistence;
 using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
+using AnonymizationTool.Export.Csv;
+using AnonymizationTool.Export.SchulIT.Idp;
 using AnonymizationTool.Settings;
 using AnonymizationTool.UI;
 using Autofac;
@@ -40,7 +42,8 @@ namespace AnonymizationTool.ViewModels
 
             builder.RegisterType<StudentFaker>().As<IStudentFaker>().SingleInstance();
 
-            builder.RegisterType<CsvExportService>().As<IExportService>().SingleInstance();
+            builder.RegisterType<IdpExportService>().Named<IExportService>("schulit_idp");
+            builder.RegisterType<CsvExportService>().Named<IExportService>("csv");
 
             builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<UIDispatcher>().As<IDispatcher>().SingleInstance();

@@ -1,4 +1,5 @@
 ﻿using AnonymizationTool.Data;
+using AnonymizationTool.Settings.Export;
 using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -29,6 +30,9 @@ namespace AnonymizationTool.Settings
             Type = DatabaseType.SQLite
         };
 
+        [JsonProperty("export")]
+        public IExportSettings Export { get; } = new JsonExportSettings();
+
         public JsonSettings()
         {
             var jsonEmailSettings = Email as JsonEmailSettings;
@@ -47,6 +51,12 @@ namespace AnonymizationTool.Settings
             if (jsonDatabaseConnection != null)
             {
                 jsonDatabaseConnection.PropertyChanged += OnPropertyChanged;
+            }
+
+            var jsonExportSettings = Export as JsonExportSettings;
+            if(jsonExportSettings != null)
+            {
+                jsonExportSettings.PropertyChanged += OnPropertyChanged;
             }
         }
 

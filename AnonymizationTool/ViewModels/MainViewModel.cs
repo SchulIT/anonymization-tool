@@ -5,6 +5,7 @@ using AnonymizationTool.Data.SchILD;
 using AnonymizationTool.Export;
 using AnonymizationTool.Messages;
 using AnonymizationTool.UI;
+using Autofac.Features.Indexed;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -82,21 +83,23 @@ namespace AnonymizationTool.ViewModels
 
         public RelayCommand RemoveSelectedStudentsCommand { get; private set; }
 
-        public RelayCommand ExportCommand { get; private set; }
+        public RelayCommand ExportCsvCommand { get; private set; }
+
+        public RelayCommand ExportSchulITIdpCommand { get; private set; }
 
         private IStudentFaker studentFaker;
         private readonly IPersistentDataSource dataSource;
         private readonly ISchILDDataSource schILDDataSource;
-        private readonly IExportService exportService;
+        private readonly IIndex<string, IExportService> exportServices;
         private readonly IDispatcher dispatcher;
 
-        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IExportService exportService, IDispatcher dispatcher, IMessenger messenger)
+        public MainViewModel(IStudentFaker studentFaker, IPersistentDataSource dataSource, ISchILDDataSource schILDDataSource, IIndex<string, IExportService> exportServices, IDispatcher dispatcher, IMessenger messenger)
             : base(messenger)
         {
             this.studentFaker = studentFaker;
             this.dataSource = dataSource;
             this.schILDDataSource = schILDDataSource;
-            this.exportService = exportService;
+            this.exportServices = exportServices;
             this.dispatcher = dispatcher;
 
             LoadStudentsCommand = new RelayCommand(LoadStudents, CanLoadStudents);
@@ -105,13 +108,15 @@ namespace AnonymizationTool.ViewModels
             AnonymizeSelectedStudentsCommand = new RelayCommand(AnomyizeSelectedStudents, CanAnonymizeSelectedStudents);
             RemoveNonActiveStudentsCommand = new RelayCommand(RemoveNonActive, CanRemoveNonActive);
             RemoveSelectedStudentsCommand = new RelayCommand(RemoveSelected, CanRemoveSelected);
-            ExportCommand = new RelayCommand(Export, CanExport);
+            ExportCsvCommand = new RelayCommand(ExportCsv, CanExport);
+            ExportSchulITIdpCommand = new RelayCommand(ExportSchulITIdp, CanExport);
 
             Students.CollectionChanged += (sender, args) =>
             {
                 AnonymizeCommand?.RaiseCanExecuteChanged();
                 RemoveNonActiveStudentsCommand?.RaiseCanExecuteChanged();
-                ExportCommand?.RaiseCanExecuteChanged();
+                ExportCsvCommand?.RaiseCanExecuteChanged();
+                ExportSchulITIdpCommand?.RaiseCanExecuteChanged();
             };
 
             SelectedStudents.CollectionChanged += (sender, args) =>
@@ -139,26 +144,43 @@ namespace AnonymizationTool.ViewModels
             };
         }
 
-        private async void Export()
+        private void UpdateProgress(IExportService exportService, ProgressChangedEventArgs args)
         {
-            var msg = new SelectDirectoryDialogMessage();
-            Messenger.Send(msg);
-
-            if(string.IsNullOrEmpty(msg.Path))
+            dispatcher.RunOnUI(() =>
             {
-                Messenger.Send(new DialogMessage { Title = "Vorgang abgebrochen", Header = "Export abgebrochen", Text = "Es wurden keine Daten exportiert." });
-                return;
-            }
+                if(!string.IsNullOrEmpty(args.Details))
+                {
+                    BusyMessage = args.Details;
+                }
+
+                if (args.Completed == null || args.Total == null)
+                {
+                    BusyProgress = null;
+                }
+                else if (args.Total > 0)
+                {
+                    BusyProgress = (double)args.Completed / args.Total * 100;
+                }
+                else
+                {
+                    BusyProgress = 0;
+                }
+            });
+        }
+
+        private async void ExportCsv()
+        {
+            var exportService = exportServices["csv"];
 
             try
-            {
+            {    
+                exportService.ProgressChanged += UpdateProgress;
                 IsBusy = true;
-                BusyProgress = null;
-                BusyMessage = "Exportiere CSV-Dateien...";
+                BusyProgress = 0;
 
-                await exportService.ExportAsync(msg.Path, Students);
+                await exportService.ExportAsync(Students);
 
-                Messenger.Send(new DialogMessage { Title = "Vorgang erfolgreich", Header = "Export erfolgreich", Text = $"Der Export war erfolgreich. Die Dateien wurden nach {msg.Path} exportiert." });
+                Messenger.Send(new DialogMessage { Title = "Vorgang erfolgreich", Header = "Export erfolgreich", Text = $"Der Export war erfolgreich." });
             }
             catch (Exception e)
             {
@@ -167,6 +189,33 @@ namespace AnonymizationTool.ViewModels
             finally
             {
                 IsBusy = false;
+                exportService.ProgressChanged -= UpdateProgress;
+            }
+        }
+
+        private async void ExportSchulITIdp()
+        {
+            var exportService = exportServices["schulit_idp"];
+
+            try
+            {
+                exportService.ProgressChanged += UpdateProgress;
+                IsBusy = true;
+                BusyProgress = 0;
+                BusyMessage = "Exportiere zum SchulIT Idp...";
+
+                await exportService.ExportAsync(Students);
+
+                Messenger.Send(new DialogMessage { Title = "Vorgang abgeschlose", Header = "Export erfolgreich", Text = $"Der Export war erfolgreich." });
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorDialogMessage { Exception = e, Title = "Fehler", Header = "Fehler beim Exportieren", Text = "Beim Exportieren ist ein Fehler aufgetreten." });
+            }
+            finally
+            {
+                IsBusy = false;
+                exportService.ProgressChanged -= UpdateProgress;
             }
         }
 

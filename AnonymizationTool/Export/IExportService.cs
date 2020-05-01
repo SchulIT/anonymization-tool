@@ -6,6 +6,8 @@ namespace AnonymizationTool.Export
 {
     public interface IExportService
     {
-        Task ExportAsync(string directory, IEnumerable<AnonymousStudent> students);
+        event ProgressChangedEventHandler ProgressChanged;
+
+        Task ExportAsync(IEnumerable<AnonymousStudent> students);
     }
 }

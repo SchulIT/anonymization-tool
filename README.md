@@ -156,10 +156,10 @@ Dann bitte in den [Issue schauen](https://github.com/SchulIT/anonymization-tool/
 
 Eine kurze Anleitung zum Bauen des Projektes gibt es [hier](BUILD.md).
 
-## Lizenz
-
-[MIT License](LICENSE.md)
-
 ## Mitmachen
 
 Wer möchte, darf gerne Bugs melden oder Pull Requests einreichen :smile:
+
+## Lizenz
+
+Der Quelltext steht (abgesehen von den [Icons](ICONS_LICENSE.md)) unter der [MIT License](LICENSE.md).

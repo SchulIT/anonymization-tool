@@ -51,7 +51,7 @@ namespace AnonymizationTool.Export.SchulIT.Idp
                 {
                     var requests = new List<Task<HttpResponseMessage>>();
 
-                    for (int currentIdx = current; currentIdx < current + MaxConcurrentRequests; currentIdx++)
+                    for (int currentIdx = current; currentIdx < Math.Min(current + MaxConcurrentRequests, total); currentIdx++)
                     {
                         var student = students.ElementAt(currentIdx);
 
